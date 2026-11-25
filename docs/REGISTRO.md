@@ -50,3 +50,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: f764a38 chore: set up local Supabase with CLI and Docker
 - Notas: la CLI 3.4.0 usa `supabase/config.jsonc` (no TOML); aceptado. Confirmación de email desactivada; realtime/storage/edge/analytics desactivados. Pendiente menor: `seed.sql` referenciado pero inexistente (crear en hito 3 o vaciar `sql_paths`).
+
+### 2.1 — Clientes @supabase/ssr y proxy de sesión
+- Ronda 1: APROBADO
+- Commit: c54451c feat(auth): add Supabase SSR clients and session proxy protecting private routes
+- Notas: `getClaims()` en el proxy; `safeNextPath` anti open redirect. Mejora menor pendiente: copiar cabeceras anti-caché también a la respuesta de redirección (se incluye en la 2.3).
