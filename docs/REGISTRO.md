@@ -97,3 +97,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: feat(applications): add typed server data layer for applications CRUD
 - Notas: `src/lib/applications/{errors,repository}.ts`; resultado `{ ok, data } | { ok, error }`; sin comprobación de sesión (RLS → 42501 → unauthorized; las Server Actions sí deben comprobarla); update/delete con `.select().maybeSingle()` → 0 filas = not_found. Mejoras sugeridas: afinar grep TS-02 (falsos positivos con "any" en comentarios); paquete `server-only`.
+
+### 4.2–4.5 — Lista, formulario crear/editar, borrado y e2e
+- Ronda 1: APROBADO (e2e 12 passed en chromium + mobile-chromium; db:test:rls 15 PASS)
+- Commit: feat(applications): add list, create/edit form, accessible delete and CRUD e2e
+- Notas: rutas `/dashboard`, `/dashboard/candidaturas/nueva`, `/dashboard/candidaturas/[id]/editar`; Server Actions en `src/lib/applications/actions.ts` (sesión → safeParse → repository; id de update ligado con `.bind`); borrado con `<dialog>` nativo; "hoy" en `Europe/Madrid`. Cambio de plan: el e2e registra su propio usuario (o usa `E2E_USER_*`); la parada del usuario de prueba pasa al hito 9. Pendientes para el hito 8: anunciar "Candidatura borrada" en `aria-live` y fijar el foco tras borrar; pasar el esquema de update al formulario de edición (VAL-01 literal); mover helpers de formulario comunes a `src/components/forms`/`src/lib/forms`; variante oscura de `FormMessages`; paquete `server-only`.
+
+**Hito 4 cerrado** — 2 ciclos (4.1 · 4.2–4.5), ambos aprobados en la primera ronda.

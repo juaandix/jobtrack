@@ -69,7 +69,7 @@ TS-04. Revisión manual de que un usuario no puede leer ni escribir filas de otr
 - 4.4 Borrado con confirmación accesible.
 - 4.5 Test e2e: login → crear candidatura → aparece en la lista.
 
-⏸ Crear el usuario de prueba y poner `E2E_USER_EMAIL`/`E2E_USER_PASSWORD` en `.env.local`.
+En local el e2e registra su propio usuario único (como `auth.spec.ts`), porque `db:reset` borra los usuarios; si `E2E_USER_EMAIL`/`E2E_USER_PASSWORD` están definidas, inicia sesión con ellas. La parada ⏸ del usuario de prueba pasa al hito 9 (producción). (Decisión del orquestador, 2026-11-25.)
 
 **Testing comprueba**: VAL-02 en todas las acciones, DB-05 (el cliente no envía `user_id`),
 A11Y-01/02/03, ARQ-06, TEST-03, TEST-06 (ejecuta `npm run e2e`).

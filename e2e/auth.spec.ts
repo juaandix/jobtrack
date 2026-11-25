@@ -1,16 +1,9 @@
-import { randomUUID } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
+import { uniqueCredentials } from "./support/auth";
 
 // Needs the local Supabase running (`npm run db:start`) with email
 // confirmation disabled, and its URL and public key in .env.local. Each run
 // signs up a brand-new user, so no real credentials are involved (SEC-05).
-function uniqueCredentials(): { email: string; password: string } {
-  const id = `${Date.now()}-${randomUUID().slice(0, 8)}`;
-  return {
-    email: `e2e-${id}@${["example", "test"].join(".")}`,
-    password: `Pw-${randomUUID()}`,
-  };
-}
 
 async function logIn(page: Page, email: string, password: string) {
   await page.getByLabel("Email").fill(email);

@@ -26,7 +26,7 @@ export type Application = Tables<"applications">;
 const TABLE = "applications";
 
 /** Postgres accepts any 8-4-4-4-12 hex string as a `uuid`. */
-const applicationIdSchema = z.guid();
+export const applicationIdSchema = z.guid();
 
 function isApplicationId(id: unknown): id is string {
   return applicationIdSchema.safeParse(id).success;
