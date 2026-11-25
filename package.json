@@ -22,6 +22,7 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:status": "supabase status",
+    "db:test:rls": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/test-rls.ts",
     "db:types": "supabase gen types typescript > src/lib/database.types.ts && prettier --write src/lib/database.types.ts"
   },
   "dependencies": {

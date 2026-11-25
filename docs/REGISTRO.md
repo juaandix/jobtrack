@@ -78,3 +78,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO (check:guidelines falla solo por DB-02, esperado hasta la 3.2)
 - Commit: ccb8cd2 feat(db): add applications table with status and portal enums, constraints and indexes
 - Notas: índices `(user_id, status)` y `(user_id, applied_at desc)`; sin índice suelto en `user_id` (cubierto por prefijo). Para la 3.3: `offer_url` exige `http(s)://` en minúsculas y `company`/`position` deben llegar recortados (trim) desde Zod.
+
+### 3.2 — RLS y 4 políticas en applications
+- Ronda 1: APROBADO (Testing verificó con mutaciones: select `using (true)` → 3 FAIL; RLS desactivado → 10 FAIL; ambos exit 1)
+- Commit: feat(db): enable RLS on applications with per-user policies and RLS test script
+- Notas: `revoke all` a anon; `db:test:rls` (15 PASS, sin service role, solo URLs locales). Pendientes de defensa en profundidad: revocar `truncate, references, trigger` a `authenticated` (no explotable vía PostgREST); en el script, distinguir "0 filas" de "permiso denegado" en la comprobación anon; ejecutar `db:test:rls` en CI.
