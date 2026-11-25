@@ -90,3 +90,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Notas: `src/lib/validation/application.ts`; enums desde `Constants.public.Enums` + test que parsea las migraciones; campos en snake_case asignables a `TablesInsert/Update`; `applied_at` obligatorio en Zod; `portal`/`status` sin default en Zod (aplica el SQL); claves prohibidas se descartan (strip). Para el hito 4: traducir el error del CHECK `applications_salary_order` en ediciones parciales de salario; etiquetas en español de estados/portales. Pendiente: revisar `src/lib/validation/auth.ts` (`abort: true`/`.pipe()` pueden impedir el refine de contraseñas con email vacío).
 
 **Hito 3 cerrado** — 3 tareas (3.1–3.3), todas aprobadas en la primera ronda.
+
+## Hito 4 — CRUD
+
+### 4.1 — Capa de datos de candidaturas
+- Ronda 1: APROBADO
+- Commit: feat(applications): add typed server data layer for applications CRUD
+- Notas: `src/lib/applications/{errors,repository}.ts`; resultado `{ ok, data } | { ok, error }`; sin comprobación de sesión (RLS → 42501 → unauthorized; las Server Actions sí deben comprobarla); update/delete con `.select().maybeSingle()` → 0 filas = not_found. Mejoras sugeridas: afinar grep TS-02 (falsos positivos con "any" en comentarios); paquete `server-only`.
