@@ -19,3 +19,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: 81e0a01 chore: enforce strict ESLint rules and add Prettier with Tailwind plugin
 - Notas: `no-console` permite `warn`/`error` (ARQ-04 solo prohíbe `console.log`). Prettier excluye `docs/`, `CLAUDE.md`, `AGENTS.md` y `.claude/`.
+
+### 1.3 — Vitest + Testing Library + jsdom con umbrales de cobertura
+- Ronda 1: APROBADO
+- Commit: 07e7c09 test: set up Vitest with Testing Library and coverage thresholds
+- Notas: `@types/node` ^22 (lo exige vitest 5) y `"type": "module"` en `package.json`. Pendiente para la 1.6: fijar Node ≥22.12 en `engines`/`.nvmrc`.
