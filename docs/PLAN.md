@@ -27,10 +27,10 @@ en `vitest.config.ts`; que el script de directrices detecta los patrones; SEC-02
 
 ## Hito 2 — Auth
 
-⏸ Crear el proyecto en Supabase, copiar URL y anon key a `.env.local`, ajustar la
-configuración de email (te daré los pasos exactos).
+Supabase **local** (CLI + Docker) durante los hitos 2–8; el proyecto en la nube se crea en el hito 9.
 
 **Develop**
+- 2.0 Supabase local: CLI como devDependency, `supabase init`, scripts `db:start`/`db:stop`/`db:reset`, `.env.local` con la URL y la anon key locales, email sin confirmación en `supabase/config.toml`.
 - 2.1 Clientes `@supabase/ssr` (servidor/navegador) en `src/lib/supabase/` y middleware/proxy que refresca sesión y protege rutas privadas.
 - 2.2 Esquemas Zod de login/registro + tests.
 - 2.3 Páginas `/login` y `/registro` con Server Actions, errores accesibles; botón de cerrar sesión; layout privado con `<nav>`.
@@ -45,7 +45,7 @@ redirige a `/login`), que no se usa la service role, tests de los formularios co
 - 3.2 RLS + 4 políticas `auth.uid() = user_id`.
 - 3.3 `database.types.ts` y esquema Zod de candidatura (crear/editar) alineado con los enums + tests.
 
-⏸ Aplicar la migración en Supabase (SQL Editor o `supabase db push`, te daré los pasos).
+La migración se aplica en local con `npm run db:reset` (en la nube, en el hito 9).
 
 **Testing comprueba**: DB-01…05 (script RLS), VAL-03 (enums Zod = enums SQL), VAL-04,
 TS-04. Revisión manual de que un usuario no puede leer ni escribir filas de otro según las políticas.
@@ -103,6 +103,9 @@ a 0; cambio de año), A11Y-08, ARQ-03, cobertura de `src/lib/metrics`.
 puntos pedidos y que los pasos de arranque local funcionan tal cual están escritos.
 
 ## Hito 9 — Despliegue
+
+⏸ Crear el proyecto de Supabase en la nube (inicio de sesión del usuario), aplicar las migraciones
+(`supabase db push`) y configurar email y URLs de redirección.
 
 ⏸ Subir el repo a GitHub (lo puedo hacer yo con `gh` si me lo autorizas), importar en
 Vercel, configurar las variables de entorno y las URLs de redirección de Supabase Auth.

@@ -9,6 +9,7 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - 2026-11-25 — Repositorio de GitHub: pendiente de confirmar en el hito 9.
 - 2026-11-25 — SEC-01: el grep excluye las líneas `"integrity"` de `package-lock.json` (falso positivo con `eyJ` dentro de hashes sha512). Directriz actualizada.
 - 2026-11-25 — SEC-01: el comando usa `ls-files -z | xargs -0 grep -H` (rutas con espacios y prefijo de fichero siempre presente), igual que el script.
+- 2026-11-25 — Supabase en local (CLI + Docker) durante los hitos 2–8; el proyecto en la nube se crea en el hito 9. Se añade la tarea 2.0 al plan. Decisión del usuario.
 
 ## Hito 1 — Setup
 
@@ -42,3 +43,5 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Commit: d86ef5b chore: add .env.example, pin Node version and finish project scripts
 
 **Hito 1 cerrado** — 6 tareas, todas aprobadas en la primera ronda.
+
+## Hito 2 — Auth
