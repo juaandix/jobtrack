@@ -60,3 +60,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: da7ffb5 feat(auth): add Zod login and signup schemas with Spanish messages
 - Notas: zod 4.6.7. `fieldErrors(error, fields)` recibe la lista de campos para evitar `as`. Límite de 72 en caracteres (bcrypt cuenta bytes; posible mejora futura).
+
+### 2.3 — Páginas /login y /registro, cerrar sesión y layout privado
+- Ronda 1: APROBADO
+- Commit: 257633d feat(auth): add login, signup and logout with accessible forms and private dashboard layout
+- Notas: estado de formulario con `notice` (registro con confirmación de email). Layout y página se renderizan en paralelo: en el hito 4 las páginas que lean datos deben apoyarse en RLS o comprobar sesión. Menores pendientes: `logAuthError` podría registrar solo name/message; `FormMessages` sin variante dark. Entorno: el repo en el Escritorio (iCloud) genera duplicados "* 2.ts" en `.next/`.
+
+**Hito 2 cerrado** — 4 tareas (2.0–2.3), todas aprobadas en la primera ronda.
