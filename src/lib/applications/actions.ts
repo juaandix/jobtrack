@@ -2,10 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import {
   notFoundError,
   validationError,
   type ApplicationError,
+  type ApplicationResult,
 } from "./errors";
 import {
   readApplicationForm,
@@ -16,6 +18,7 @@ import {
 import {
   applicationIdSchema,
   createApplication,
+  type Application,
   deleteApplication,
   updateApplication,
 } from "./repository";
@@ -25,6 +28,7 @@ import { LOGIN_PATH } from "@/lib/auth/routes";
 import { getSessionUser } from "@/lib/auth/session";
 import {
   applicationCreateSchema,
+  applicationStatusSchema,
   applicationUpdateSchema,
 } from "@/lib/validation/application";
 
@@ -121,4 +125,35 @@ export async function deleteApplicationAction(
 
   revalidatePath(APPLICATIONS_PATH);
   return { ok: true, data: result.data };
+}
+
+const statusChangeSchema = z.object({
+  id: applicationIdSchema,
+  status: applicationStatusSchema,
+});
+
+/**
+ * Changes only the status of one of the user's applications (kanban). Both
+ * arguments come from the client, so they are validated before querying: an
+ * invalid id or status is a validation error. A missing or someone else's
+ * application yields "not found", never success.
+ */
+export async function updateStatusAction(
+  id: string,
+  status: string,
+): Promise<ApplicationResult<Application>> {
+  await requireSession();
+
+  const parsed = statusChangeSchema.safeParse({ id, status });
+  if (!parsed.success) {
+    return { ok: false, error: validationError(parsed.error) };
+  }
+
+  const result = await updateApplication(parsed.data.id, {
+    status: parsed.data.status,
+  });
+  if (!result.ok) return result;
+
+  revalidatePath(APPLICATIONS_PATH);
+  return result;
 }

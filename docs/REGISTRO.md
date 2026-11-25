@@ -113,3 +113,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Notas: `src/lib/applications/filter.ts` (NFD + quitar marcas, `includes` sin regex); parámetros `status`, `portal`, `q` (repetido → primero); barra `<form method="get">` que funciona sin JS y con JS hace `router.push` a URL limpia; etiquetas "Filtrar por estado/portal" para no chocar con el formulario de edición (Next 16 deja montada la página anterior). Pendientes para el hito 8: e2e con `javaScriptEnabled: false`; el segundo test de `e2e/filters.spec.ts` no borra la candidatura que crea; centralizar clases de botón/enlace repetidas.
 
 **Hito 5 cerrado** — 1 ciclo, aprobado en la primera ronda.
+
+## Hito 6 — Kanban
+
+### 6.1 + 6.3 (lógica) — Agrupación por estado y updateStatus
+- Ronda 1: APROBADO
+- Commit: feat(kanban): add status grouping, optimistic status change helpers and updateStatus action
+- Notas: `src/lib/applications/kanban.ts` (`groupByStatus`, `planStatusChange`, `apply/revert/settleStatusChange`, estado optimista sobre lista plana); `updateStatusAction(id, status)` en `actions.ts` (revalida `/dashboard`). Para el ciclo 6.2: revalidar también la ruta del tablero si no es `/dashboard`; opcional quitar el `Map` de `groupByStatus` (rama `?? []` inalcanzable) y añadir test con argumentos no string.

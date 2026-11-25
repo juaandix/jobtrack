@@ -3,6 +3,7 @@ import {
   createApplicationAction,
   deleteApplicationAction,
   updateApplicationAction,
+  updateStatusAction,
 } from "./actions";
 import {
   APPLICATION_ERROR_MESSAGES,
@@ -299,6 +300,98 @@ describe("deleteApplicationAction", () => {
       ok: false,
       message: APPLICATION_ERROR_MESSAGES.notFound,
     });
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateStatusAction", () => {
+  it("sin sesión redirige a /login sin tocar la base de datos", async () => {
+    getSessionUser.mockResolvedValue(null);
+
+    await expect(updateStatusAction(ID, "entrevista")).rejects.toThrow(
+      "NEXT_REDIRECT /login",
+    );
+    expect(repository.updateApplication).not.toHaveBeenCalled();
+  });
+
+  it("con un estado fuera del enum devuelve error de validación sin consultar", async () => {
+    const result = await updateStatusAction(ID, "aceptada");
+
+    expect(repository.updateApplication).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      ok: false,
+      error: {
+        kind: "validation",
+        message: APPLICATION_MESSAGES.invalidForm,
+        fieldErrors: { status: APPLICATION_MESSAGES.statusInvalid },
+      },
+    });
+  });
+
+  it.each([
+    ["vacío", ""],
+    ["que no es un uuid", "1 or 1=1"],
+  ])(
+    "con un id %s devuelve error de validación sin consultar",
+    async (_case, id) => {
+      const result = await updateStatusAction(id, "entrevista");
+
+      expect(repository.updateApplication).not.toHaveBeenCalled();
+      expect(result).toEqual({
+        ok: false,
+        error: {
+          kind: "validation",
+          message: APPLICATION_MESSAGES.invalidForm,
+          fieldErrors: {},
+        },
+      });
+    },
+  );
+
+  it("actualiza solo el estado, sin user_id, y revalida la lista", async () => {
+    const updated: Application = { ...ROW, status: "entrevista" };
+    repository.updateApplication.mockResolvedValue({ ok: true, data: updated });
+
+    const result = await updateStatusAction(ID, "entrevista");
+
+    expect(repository.updateApplication).toHaveBeenCalledTimes(1);
+    expect(repository.updateApplication).toHaveBeenCalledWith(ID, {
+      status: "entrevista",
+    });
+    expect(result).toEqual({ ok: true, data: updated });
+    expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("si no existe o es ajena devuelve 'no encontrada', nunca éxito", async () => {
+    repository.updateApplication.mockResolvedValue({
+      ok: false,
+      error: notFoundError(),
+    });
+
+    const result = await updateStatusAction(ID, "oferta");
+
+    expect(result).toEqual({ ok: false, error: notFoundError() });
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
+  it("con un error de base de datos devuelve un mensaje en español sin detalles", async () => {
+    repository.updateApplication.mockResolvedValue({
+      ok: false,
+      error: applicationDatabaseError(
+        { code: "XX000", message: 'relation "applications" is broken' },
+        "update",
+      ),
+    });
+
+    const result = await updateStatusAction(ID, "oferta");
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.message).toBe(
+      APPLICATION_ERROR_MESSAGES.unknown.update,
+    );
+    expect(result.error.message).not.toContain("applications");
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 });
