@@ -14,3 +14,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: 664566b chore: scaffold Next.js app with strict TypeScript and Tailwind
 - Notas: `typecheck` = `next typegen && tsc --noEmit` (necesario para `LayoutProps`). Pendientes detectados: `!.env.example` en `.gitignore` (1.6); falso positivo de SEC-01 en `package-lock.json` (1.5); `globals.css` pisa Geist con Arial (UI).
+
+### 1.2 — ESLint estricto + Prettier
+- Ronda 1: APROBADO
+- Commit: 81e0a01 chore: enforce strict ESLint rules and add Prettier with Tailwind plugin
+- Notas: `no-console` permite `warn`/`error` (ARQ-04 solo prohíbe `console.log`). Prettier excluye `docs/`, `CLAUDE.md`, `AGENTS.md` y `.claude/`.
