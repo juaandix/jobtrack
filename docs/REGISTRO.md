@@ -36,3 +36,9 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO (check:guidelines falla solo por SEC-02, esperado hasta la 1.6)
 - Commit: 0e85c61 chore: add automated guidelines check script
 - Notas: DB-05 y UI-01 son informativas; TEST-04 falla solo sin comentario justificativo. SEC-02 exige `.env.example` sin valores.
+
+### 1.6 — .gitignore, .env.example, engines y scripts
+- Ronda 1: APROBADO (los 8 comandos en verde; check:guidelines 16 OK / 0 FAIL)
+- Commit: d86ef5b chore: add .env.example, pin Node version and finish project scripts
+
+**Hito 1 cerrado** — 6 tareas, todas aprobadas en la primera ronda.
