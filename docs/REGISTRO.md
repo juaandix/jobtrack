@@ -13,6 +13,7 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - 2026-11-25 — Estados (orden del kanban): enviada, en_proceso, entrevista, oferta, descartada, rechazada_por_mi. Para la tasa de respuesta cuenta como respondida toda candidatura cuyo estado no es "enviada". Decisión del usuario.
 - 2026-11-25 — Portales: linkedin, infojobs, tecnoempleo, indeed, web_empresa, referido, otro. Decisión del usuario.
 - 2026-11-25 — El repo se mueve de ~/Desktop/jobtrack a ~/dev/jobtrack (iCloud duplicaba ficheros en .next/). Decisión del usuario.
+- 2026-11-25 — Ritmo: ciclos agrupados (ver PLAN), sin pausa de OK entre hitos, e2e solo en tareas de UI/auth y al cerrar hito, registro dentro del commit de la tarea. Decisión del usuario.
 
 ## Hito 1 — Setup
 

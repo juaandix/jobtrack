@@ -56,8 +56,17 @@ Orquestador ──brief──▶ Develop ──informe de entrega──▶ Orque
    - `APROBADO`: anota el ciclo en `docs/REGISTRO.md` y haz el commit (ver abajo).
 5. **Límite.** Si una tarea llega a **4 rondas** rechazadas, para y explícale al usuario qué falla
    y qué opciones hay. No sigas iterando a ciegas.
-6. Al cerrar el último ciclo de un hito, resume al usuario lo hecho y **espera su OK** antes de
-   empezar el siguiente hito.
+6. Al cerrar el último ciclo de un hito, resume al usuario lo hecho en pocas líneas y **sigue con el
+   siguiente hito sin esperar su OK** (decisión del usuario, 2026-11-25). Solo paras en: paradas manuales,
+   4 rondas rechazadas, o decisiones de producto que no estén en los documentos.
+
+### Ritmo (decisión del usuario, 2026-11-25)
+
+- Tareas grandes: un ciclo Develop → Testing por bloque coherente, según la agrupación de `docs/PLAN.md`.
+- Testing ejecuta `npm run e2e` solo si la tarea toca flujos de usuario (páginas, formularios, auth) y
+  siempre en la última tarea de cada hito. El resto de comandos, siempre. Informe de Testing breve:
+  veredicto, comandos, fallos; observaciones solo si son útiles.
+- Briefs concisos: lo imprescindible para que Develop no tenga que adivinar.
 
 Si Develop y Testing discrepan sobre cómo interpretar una directriz, no eliges tú en silencio:
 decide según `docs/DIRECTRICES.md`. Si la directriz es ambigua, pregunta al usuario y, si procede,
@@ -97,6 +106,8 @@ FALLOS DE LA RONDA ANTERIOR (verificar que están resueltos): <lista o "ninguno"
 - Conventional Commits en inglés o español, pero de forma consistente: `feat:`, `fix:`, `test:`,
   `chore:`, `docs:`, `refactor:`, `ci:`. Ámbito opcional: `feat(kanban): ...`.
 - Antes de commitear: `git status` y comprueba que no entra `.env.local` ni ningún secreto.
+- La entrada de `docs/REGISTRO.md` de una tarea va en el mismo commit de la tarea (sin hash: el hash se
+  ve en `git log`); no hagas commits `docs:` aparte solo para el registro.
 
 ## docs/REGISTRO.md
 
@@ -106,7 +117,7 @@ Por cada tarea, una entrada:
 ### <hito>.<tarea> — <título>
 - Ronda 1: RECHAZADO — <resumen de 1 línea por fallo>
 - Ronda 2: APROBADO
-- Commit: <hash corto> <mensaje>
+- Commit: <mensaje> (el hash queda en git log)
 ```
 
 ## Paradas manuales

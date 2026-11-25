@@ -7,6 +7,16 @@ acaba en un commit. Al cerrar un hito, el orquestador espera el OK del usuario.
 Testing ejecuta **siempre** lint, typecheck, format:check, test:coverage, build y
 check:guidelines (a partir del hito 1). En cada hito se indica solo lo **específico** que revisa.
 
+**Agrupación de ciclos (desde el hito 3, decisión del usuario 2026-11-25)** — un ciclo Develop → Testing por grupo:
+- Hito 3: [3.2] · [3.3]
+- Hito 4: [4.1] · [4.2 + 4.3 + 4.4 + 4.5]
+- Hito 5: [5.1 + 5.2]
+- Hito 6: [6.1 + 6.3 (lógica y Server Action)] · [6.2 + selector de estado en UI]
+- Hito 7: [7.1 + 7.2]
+- Hito 8: [8.1 + 8.2] · [8.3]
+- Hito 9: [9.1]
+No se espera OK del usuario entre hitos; solo en paradas manuales ⏸.
+
 ---
 
 ## Hito 1 — Setup
