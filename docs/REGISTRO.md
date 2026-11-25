@@ -8,6 +8,7 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - 2026-11-25 — Salario: dos campos numéricos opcionales, mínimo y máximo (bruto anual, €), con mínimo ≤ máximo.
 - 2026-11-25 — Repositorio de GitHub: pendiente de confirmar en el hito 9.
 - 2026-11-25 — SEC-01: el grep excluye las líneas `"integrity"` de `package-lock.json` (falso positivo con `eyJ` dentro de hashes sha512). Directriz actualizada.
+- 2026-11-25 — SEC-01: el comando usa `ls-files -z | xargs -0 grep -H` (rutas con espacios y prefijo de fichero siempre presente), igual que el script.
 
 ## Hito 1 — Setup
 
@@ -30,3 +31,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: 56fd833 test: configure Playwright with home smoke test
 - Notas: proyectos `chromium` y `mobile-chromium` (375 px). Carga opcional de `.env.local` con `process.loadEnvFile`.
+
+### 1.5 — scripts/check-guidelines.sh
+- Ronda 1: APROBADO (check:guidelines falla solo por SEC-02, esperado hasta la 1.6)
+- Commit: 0e85c61 chore: add automated guidelines check script
+- Notas: DB-05 y UI-01 son informativas; TEST-04 falla solo sin comentario justificativo. SEC-02 exige `.env.example` sin valores.
