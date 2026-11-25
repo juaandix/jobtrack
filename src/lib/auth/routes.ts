@@ -78,3 +78,24 @@ export function resolveAuthRedirect(
   }
   return { kind: "none" };
 }
+
+/**
+ * Link to an auth page that keeps the `next` destination, omitting it when it
+ * is the default one (the dashboard) so URLs stay clean.
+ */
+export function withNextParam(pathname: string, next: string): string {
+  const target = safeNextPath(next);
+  if (target === DASHBOARD_PATH) return pathname;
+  return `${pathname}?${new URLSearchParams({ [NEXT_PARAM]: target }).toString()}`;
+}
+
+/**
+ * Sanitised `next` destination from a page's `searchParams`. Repeated or
+ * missing values fall back to the dashboard.
+ */
+export function nextFromSearchParams(
+  params: Readonly<Record<string, string | string[] | undefined>>,
+): string {
+  const value = params[NEXT_PARAM];
+  return safeNextPath(typeof value === "string" ? value : null);
+}

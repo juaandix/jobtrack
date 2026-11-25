@@ -14,6 +14,9 @@ export async function updateSession(
 ): Promise<NextResponse> {
   const { url, anonKey } = getSupabaseEnv();
   let response = NextResponse.next({ request });
+  // Anti-cache headers sent by Supabase with refreshed cookies; they must
+  // also reach a redirect so no CDN caches a response carrying a session.
+  let sessionHeaders: Record<string, string> = {};
 
   const supabase = createServerClient<Database>(url, anonKey, {
     cookies: {
@@ -28,6 +31,7 @@ export async function updateSession(
         cookiesToSet.forEach(({ name, value, options }) => {
           response.cookies.set(name, value, options);
         });
+        sessionHeaders = headers;
         Object.entries(headers).forEach(([key, value]) => {
           response.headers.set(key, value);
         });
@@ -59,6 +63,9 @@ export async function updateSession(
   const redirect = NextResponse.redirect(target);
   response.cookies.getAll().forEach((cookie) => {
     redirect.cookies.set(cookie);
+  });
+  Object.entries(sessionHeaders).forEach(([key, value]) => {
+    redirect.headers.set(key, value);
   });
   return redirect;
 }

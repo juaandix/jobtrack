@@ -4,8 +4,10 @@ import {
   LOGIN_PATH,
   isAuthPath,
   isPrivatePath,
+  nextFromSearchParams,
   resolveAuthRedirect,
   safeNextPath,
+  withNextParam,
 } from "./routes";
 
 describe("isPrivatePath", () => {
@@ -128,5 +130,35 @@ describe("resolveAuthRedirect", () => {
       kind: "none",
     });
     expect(resolveAuthRedirect("/", "", true)).toEqual({ kind: "none" });
+  });
+});
+
+describe("withNextParam", () => {
+  it("omite next cuando es el destino por defecto", () => {
+    expect(withNextParam(LOGIN_PATH, DASHBOARD_PATH)).toBe(LOGIN_PATH);
+  });
+
+  it("codifica un next interno", () => {
+    expect(withNextParam(LOGIN_PATH, "/dashboard/x?a=1&b=2")).toBe(
+      "/login?next=%2Fdashboard%2Fx%3Fa%3D1%26b%3D2",
+    );
+  });
+
+  it("descarta un next externo", () => {
+    expect(withNextParam(LOGIN_PATH, "https://evil.example")).toBe(LOGIN_PATH);
+  });
+});
+
+describe("nextFromSearchParams", () => {
+  it("devuelve un next interno", () => {
+    expect(nextFromSearchParams({ next: "/dashboard/x" })).toBe("/dashboard/x");
+  });
+
+  it.each([
+    ["sin next", {}],
+    ["next repetido", { next: ["/a", "/b"] }],
+    ["next externo", { next: "//evil.example" }],
+  ])("usa el dashboard con %s", (_case, params) => {
+    expect(nextFromSearchParams(params)).toBe(DASHBOARD_PATH);
   });
 });
