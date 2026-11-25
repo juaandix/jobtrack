@@ -12,6 +12,7 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - 2026-11-25 — Supabase en local (CLI + Docker) durante los hitos 2–8; el proyecto en la nube se crea en el hito 9. Se añade la tarea 2.0 al plan. Decisión del usuario.
 - 2026-11-25 — Estados (orden del kanban): enviada, en_proceso, entrevista, oferta, descartada, rechazada_por_mi. Para la tasa de respuesta cuenta como respondida toda candidatura cuyo estado no es "enviada". Decisión del usuario.
 - 2026-11-25 — Portales: linkedin, infojobs, tecnoempleo, indeed, web_empresa, referido, otro. Decisión del usuario.
+- 2026-11-25 — El repo se mueve de ~/Desktop/jobtrack a ~/dev/jobtrack (iCloud duplicaba ficheros en .next/). Decisión del usuario.
 
 ## Hito 1 — Setup
 
@@ -71,3 +72,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 **Hito 2 cerrado** — 4 tareas (2.0–2.3), todas aprobadas en la primera ronda.
 
 ## Hito 3 — Modelo de datos
+
+### 3.1 — Migración de la tabla applications
+- Ronda 1: APROBADO (check:guidelines falla solo por DB-02, esperado hasta la 3.2)
+- Commit: ccb8cd2 feat(db): add applications table with status and portal enums, constraints and indexes
+- Notas: índices `(user_id, status)` y `(user_id, applied_at desc)`; sin índice suelto en `user_id` (cubierto por prefijo). Para la 3.3: `offer_url` exige `http(s)://` en minúsculas y `company`/`position` deben llegar recortados (trim) desde Zod.
