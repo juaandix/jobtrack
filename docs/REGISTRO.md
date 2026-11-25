@@ -45,3 +45,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 **Hito 1 cerrado** — 6 tareas, todas aprobadas en la primera ronda.
 
 ## Hito 2 — Auth
+
+### 2.0 — Supabase local con CLI + Docker
+- Ronda 1: APROBADO
+- Commit: f764a38 chore: set up local Supabase with CLI and Docker
+- Notas: la CLI 3.4.0 usa `supabase/config.jsonc` (no TOML); aceptado. Confirmación de email desactivada; realtime/storage/edge/analytics desactivados. Pendiente menor: `seed.sql` referenciado pero inexistente (crear en hito 3 o vaciar `sql_paths`).
