@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "check:guidelines": "bash scripts/check-guidelines.sh"
   },
   "dependencies": {
     "next": "16.4.6",
