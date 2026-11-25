@@ -7,6 +7,7 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - 2026-11-25 — Tasa de respuesta: cuenta como respondida toda candidatura cuyo estado no es "enviada" (incluye "descartada").
 - 2026-11-25 — Salario: dos campos numéricos opcionales, mínimo y máximo (bruto anual, €), con mínimo ≤ máximo.
 - 2026-11-25 — Repositorio de GitHub: pendiente de confirmar en el hito 9.
+- 2026-11-25 — SEC-01: el grep excluye las líneas `"integrity"` de `package-lock.json` (falso positivo con `eyJ` dentro de hashes sha512). Directriz actualizada.
 
 ## Hito 1 — Setup
 
@@ -24,3 +25,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: 07e7c09 test: set up Vitest with Testing Library and coverage thresholds
 - Notas: `@types/node` ^22 (lo exige vitest 5) y `"type": "module"` en `package.json`. Pendiente para la 1.6: fijar Node ≥22.12 en `engines`/`.nvmrc`.
+
+### 1.4 — Playwright configurado con test de humo de la home
+- Ronda 1: APROBADO
+- Commit: 56fd833 test: configure Playwright with home smoke test
+- Notas: proyectos `chromium` y `mobile-chromium` (375 px). Carga opcional de `.env.local` con `process.loadEnvFile`.
