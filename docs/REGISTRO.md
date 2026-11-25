@@ -55,3 +55,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: c54451c feat(auth): add Supabase SSR clients and session proxy protecting private routes
 - Notas: `getClaims()` en el proxy; `safeNextPath` anti open redirect. Mejora menor pendiente: copiar cabeceras anti-caché también a la respuesta de redirección (se incluye en la 2.3).
+
+### 2.2 — Esquemas Zod de login y registro
+- Ronda 1: APROBADO
+- Commit: da7ffb5 feat(auth): add Zod login and signup schemas with Spanish messages
+- Notas: zod 4.6.7. `fieldErrors(error, fields)` recibe la lista de campos para evitar `as`. Límite de 72 en caracteres (bcrypt cuenta bytes; posible mejora futura).
