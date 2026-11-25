@@ -83,3 +83,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO (Testing verificó con mutaciones: select `using (true)` → 3 FAIL; RLS desactivado → 10 FAIL; ambos exit 1)
 - Commit: feat(db): enable RLS on applications with per-user policies and RLS test script
 - Notas: `revoke all` a anon; `db:test:rls` (15 PASS, sin service role, solo URLs locales). Pendientes de defensa en profundidad: revocar `truncate, references, trigger` a `authenticated` (no explotable vía PostgREST); en el script, distinguir "0 filas" de "permiso denegado" en la comprobación anon; ejecutar `db:test:rls` en CI.
+
+### 3.3 — database.types.ts y esquema Zod de candidatura
+- Ronda 1: APROBADO (e2e 8 passed; db:test:rls 15 PASS; database.types.ts sin cambios al regenerar)
+- Commit: feat(validation): add application create/update Zod schemas aligned with SQL enums and constraints
+- Notas: `src/lib/validation/application.ts`; enums desde `Constants.public.Enums` + test que parsea las migraciones; campos en snake_case asignables a `TablesInsert/Update`; `applied_at` obligatorio en Zod; `portal`/`status` sin default en Zod (aplica el SQL); claves prohibidas se descartan (strip). Para el hito 4: traducir el error del CHECK `applications_salary_order` en ediciones parciales de salario; etiquetas en español de estados/portales. Pendiente: revisar `src/lib/validation/auth.ts` (`abort: true`/`.pipe()` pueden impedir el refine de contraseñas con email vacío).
+
+**Hito 3 cerrado** — 3 tareas (3.1–3.3), todas aprobadas en la primera ronda.
