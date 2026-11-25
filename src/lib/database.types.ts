@@ -34,7 +34,55 @@ export type Database = {
   };
   public: {
     Tables: {
-      [_ in never]: never;
+      applications: {
+        Row: {
+          applied_at: string;
+          company: string;
+          created_at: string;
+          id: string;
+          notes: string | null;
+          offer_url: string | null;
+          portal: Database["public"]["Enums"]["application_portal"];
+          position: string;
+          salary_max: number | null;
+          salary_min: number | null;
+          status: Database["public"]["Enums"]["application_status"];
+          updated_at: string;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          applied_at?: string;
+          company: string;
+          created_at?: string;
+          id?: string;
+          notes?: string | null;
+          offer_url?: string | null;
+          portal?: Database["public"]["Enums"]["application_portal"];
+          position: string;
+          salary_max?: number | null;
+          salary_min?: number | null;
+          status?: Database["public"]["Enums"]["application_status"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          applied_at?: string;
+          company?: string;
+          created_at?: string;
+          id?: string;
+          notes?: string | null;
+          offer_url?: string | null;
+          portal?: Database["public"]["Enums"]["application_portal"];
+          position?: string;
+          salary_max?: number | null;
+          salary_min?: number | null;
+          status?: Database["public"]["Enums"]["application_status"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -43,7 +91,21 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      application_portal:
+        | "linkedin"
+        | "infojobs"
+        | "tecnoempleo"
+        | "indeed"
+        | "web_empresa"
+        | "referido"
+        | "otro";
+      application_status:
+        | "enviada"
+        | "en_proceso"
+        | "entrevista"
+        | "oferta"
+        | "descartada"
+        | "rechazada_por_mi";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -173,6 +235,24 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      application_portal: [
+        "linkedin",
+        "infojobs",
+        "tecnoempleo",
+        "indeed",
+        "web_empresa",
+        "referido",
+        "otro",
+      ],
+      application_status: [
+        "enviada",
+        "en_proceso",
+        "entrevista",
+        "oferta",
+        "descartada",
+        "rechazada_por_mi",
+      ],
+    },
   },
 } as const;
