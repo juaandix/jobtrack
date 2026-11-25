@@ -1,0 +1,14 @@
+.next
+out
+build
+node_modules
+coverage
+playwright-report
+test-results
+package-lock.json
+next-env.d.ts
+*.tsbuildinfo
+docs
+CLAUDE.md
+AGENTS.md
+.claude
