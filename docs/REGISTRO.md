@@ -104,3 +104,12 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Notas: rutas `/dashboard`, `/dashboard/candidaturas/nueva`, `/dashboard/candidaturas/[id]/editar`; Server Actions en `src/lib/applications/actions.ts` (sesión → safeParse → repository; id de update ligado con `.bind`); borrado con `<dialog>` nativo; "hoy" en `Europe/Madrid`. Cambio de plan: el e2e registra su propio usuario (o usa `E2E_USER_*`); la parada del usuario de prueba pasa al hito 9. Pendientes para el hito 8: anunciar "Candidatura borrada" en `aria-live` y fijar el foco tras borrar; pasar el esquema de update al formulario de edición (VAL-01 literal); mover helpers de formulario comunes a `src/components/forms`/`src/lib/forms`; variante oscura de `FormMessages`; paquete `server-only`.
 
 **Hito 4 cerrado** — 2 ciclos (4.1 · 4.2–4.5), ambos aprobados en la primera ronda.
+
+## Hito 5 — Filtros y búsqueda
+
+### 5.1–5.2 — Función pura de filtrado y barra de filtros con estado en la URL
+- Ronda 1: APROBADO (e2e 16 passed; db:test:rls 15 PASS)
+- Commit: feat(filters): filter applications by status, portal and accent-insensitive company search via URL
+- Notas: `src/lib/applications/filter.ts` (NFD + quitar marcas, `includes` sin regex); parámetros `status`, `portal`, `q` (repetido → primero); barra `<form method="get">` que funciona sin JS y con JS hace `router.push` a URL limpia; etiquetas "Filtrar por estado/portal" para no chocar con el formulario de edición (Next 16 deja montada la página anterior). Pendientes para el hito 8: e2e con `javaScriptEnabled: false`; el segundo test de `e2e/filters.spec.ts` no borra la candidatura que crea; centralizar clases de botón/enlace repetidas.
+
+**Hito 5 cerrado** — 1 ciclo, aprobado en la primera ronda.
