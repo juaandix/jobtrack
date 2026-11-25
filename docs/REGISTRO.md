@@ -10,6 +10,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - 2026-11-25 — SEC-01: el grep excluye las líneas `"integrity"` de `package-lock.json` (falso positivo con `eyJ` dentro de hashes sha512). Directriz actualizada.
 - 2026-11-25 — SEC-01: el comando usa `ls-files -z | xargs -0 grep -H` (rutas con espacios y prefijo de fichero siempre presente), igual que el script.
 - 2026-11-25 — Supabase en local (CLI + Docker) durante los hitos 2–8; el proyecto en la nube se crea en el hito 9. Se añade la tarea 2.0 al plan. Decisión del usuario.
+- 2026-11-25 — Estados (orden del kanban): enviada, en_proceso, entrevista, oferta, descartada, rechazada_por_mi. Para la tasa de respuesta cuenta como respondida toda candidatura cuyo estado no es "enviada". Decisión del usuario.
+- 2026-11-25 — Portales: linkedin, infojobs, tecnoempleo, indeed, web_empresa, referido, otro. Decisión del usuario.
 
 ## Hito 1 — Setup
 
@@ -67,3 +69,5 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Notas: estado de formulario con `notice` (registro con confirmación de email). Layout y página se renderizan en paralelo: en el hito 4 las páginas que lean datos deben apoyarse en RLS o comprobar sesión. Menores pendientes: `logAuthError` podría registrar solo name/message; `FormMessages` sin variante dark. Entorno: el repo en el Escritorio (iCloud) genera duplicados "* 2.ts" en `.next/`.
 
 **Hito 2 cerrado** — 4 tareas (2.0–2.3), todas aprobadas en la primera ronda.
+
+## Hito 3 — Modelo de datos
