@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   APPLICATIONS_PATH,
   BOARD_PATH,
+  METRICS_PATH,
   NEW_APPLICATION_PATH,
   editApplicationPath,
 } from "./routes";
@@ -14,6 +15,8 @@ describe("rutas de candidaturas", () => {
     expect(BOARD_PATH).toBe("/dashboard/tablero");
     expect(isPrivatePath(NEW_APPLICATION_PATH)).toBe(true);
     expect(isPrivatePath(BOARD_PATH)).toBe(true);
+    expect(METRICS_PATH).toBe("/dashboard/metricas");
+    expect(isPrivatePath(METRICS_PATH)).toBe(true);
     expect(isPrivatePath(editApplicationPath("abc"))).toBe(true);
   });
 

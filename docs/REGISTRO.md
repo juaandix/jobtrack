@@ -129,3 +129,13 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Pendientes para el hito 8: ancho del tablero en escritorio; migrar specs antiguos a `e2e/support/applications.ts`; ids fijos duplicados en formularios nueva/editar con cacheComponents (`id="application-status"`); quitar `?? []` de `groupByStatus`.
 
 **Hito 6 cerrado** — 2 ciclos (6.1+6.3 · 6.2), el segundo aprobado en la ronda 2.
+
+## Hito 7 — Métricas
+
+### 7.1 + 7.2 — Funciones puras de métricas y panel con KPI y gráficos
+- Ronda 1: RECHAZADO — contraste en modo oscuro de los gráficos < 3:1 (barra semanal #1d4ed8 2.97:1, "enviada" #52525b 2.57:1 sobre #09090b).
+- Ronda 2: APROBADO (paleta única ≥ 3.85:1 en ambos fondos, comprobada en test; e2e 20 passed; db:test:rls 15 PASS)
+- Commit: feat(metrics): add metrics page with ISO-week, response-rate and portal-by-status charts and accessible tables
+- Notas: `src/lib/metrics/` (semana ISO verificada por Testing contra Python en 1990–2050); respondida = estado ≠ "enviada"; "Procesos activos" = en_proceso + entrevista; serie de las últimas 12 semanas (Europe/Madrid); gráficos `aria-hidden` con tablas visibles como alternativa; `recharts@3.11.1`. Corrección del orquestador: el ejemplo del brief "2027-01-01 en semana 1" era erróneo (es 2026-W53). Posible test intermitente en `test:coverage` (1 fallo en 1 ejecución, no reproducido). Pendientes para el hito 8: tooltip blanco en modo oscuro; vista móvil de la tabla portal × estado; mover `EmptyApplications`/`PRIMARY_LINK_CLASS` a un módulo compartido.
+
+**Hito 7 cerrado** — 1 ciclo, aprobado en la ronda 2.

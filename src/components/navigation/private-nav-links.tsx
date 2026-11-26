@@ -2,15 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { APPLICATIONS_PATH, BOARD_PATH } from "@/lib/applications/routes";
+import {
+  APPLICATIONS_PATH,
+  BOARD_PATH,
+  METRICS_PATH,
+} from "@/lib/applications/routes";
 
 const LINKS = [
   { href: APPLICATIONS_PATH, label: "Lista" },
   { href: BOARD_PATH, label: "Tablero" },
+  { href: METRICS_PATH, label: "Métricas" },
 ] as const;
 
 /**
- * The two views of the applications. A client component only to mark the
+ * The views of the applications. A client component only to mark the
  * current one with `aria-current="page"` (it needs the pathname).
  */
 export function PrivateNavLinks() {

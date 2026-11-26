@@ -9,7 +9,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("PrivateNavLinks", () => {
-  it("enlaza la lista y el tablero y marca la lista como actual", () => {
+  it("enlaza la lista, el tablero y las métricas y marca la lista como actual", () => {
     pathname.current = "/dashboard";
     render(<PrivateNavLinks />);
 
@@ -19,6 +19,20 @@ describe("PrivateNavLinks", () => {
     expect(list).toHaveAttribute("aria-current", "page");
     expect(board).toHaveAttribute("href", "/dashboard/tablero");
     expect(board).not.toHaveAttribute("aria-current");
+    const metrics = screen.getByRole("link", { name: "Métricas" });
+    expect(metrics).toHaveAttribute("href", "/dashboard/metricas");
+    expect(metrics).not.toHaveAttribute("aria-current");
+  });
+
+  it("en las métricas marca las métricas como actuales", () => {
+    pathname.current = "/dashboard/metricas";
+    render(<PrivateNavLinks />);
+
+    expect(screen.getByRole("link", { name: "Métricas" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getAllByRole("link", { current: "page" })).toHaveLength(1);
   });
 
   it("en el tablero marca el tablero como actual", () => {
