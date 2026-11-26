@@ -1,18 +1,11 @@
 import Link from "next/link";
 import { DeleteApplicationButton } from "./delete-application-button";
+import { EmptyApplications } from "./page-states";
 import { StatusBadge } from "./status-badge";
+import { SECONDARY_BUTTON_CLASS } from "@/components/ui/classes";
 import { PORTAL_LABELS, formatAppliedAt } from "@/lib/applications/labels";
 import type { Application } from "@/lib/applications/repository";
-import {
-  NEW_APPLICATION_PATH,
-  editApplicationPath,
-} from "@/lib/applications/routes";
-
-const EDIT_LINK_CLASS =
-  "inline-flex min-h-11 items-center justify-center rounded-md border border-zinc-400 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none dark:text-zinc-50 dark:hover:bg-zinc-800";
-
-export const PRIMARY_LINK_CLASS =
-  "inline-flex min-h-11 items-center justify-center rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none";
+import { editApplicationPath } from "@/lib/applications/routes";
 
 function Actions({ application }: { application: Application }) {
   const { id, company, position } = application;
@@ -21,7 +14,7 @@ function Actions({ application }: { application: Application }) {
       <Link
         href={editApplicationPath(id)}
         aria-label={`Editar la candidatura de ${position} en ${company}`}
-        className={EDIT_LINK_CLASS}
+        className={`${SECONDARY_BUTTON_CLASS} text-sm`}
       >
         Editar
       </Link>
@@ -32,21 +25,6 @@ function Actions({ application }: { application: Application }) {
 
 function AppliedAt({ value }: { value: string }) {
   return <time dateTime={value}>{formatAppliedAt(value)}</time>;
-}
-
-/** Empty state with a call to create the first application. */
-export function EmptyApplications() {
-  return (
-    <div className="flex flex-col items-start gap-4 rounded-lg border border-dashed border-zinc-400 p-6">
-      <p className="text-zinc-700 dark:text-zinc-300">
-        Todavía no tienes candidaturas. Añade la primera para empezar a
-        seguirla.
-      </p>
-      <Link href={NEW_APPLICATION_PATH} className={PRIMARY_LINK_CLASS}>
-        Añadir la primera candidatura
-      </Link>
-    </div>
-  );
 }
 
 /**

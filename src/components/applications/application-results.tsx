@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { ApplicationFilterBar } from "./application-filter-bar";
-import {
-  ApplicationList,
-  EmptyApplications,
-  PRIMARY_LINK_CLASS,
-} from "./application-list";
+import { ApplicationList } from "./application-list";
+import { EmptyApplications } from "./page-states";
+import { PRIMARY_BUTTON_CLASS } from "@/components/ui/classes";
 import {
   filterApplications,
   hasActiveFilters,
@@ -20,7 +18,7 @@ function NoResults() {
       <p className="text-zinc-700 dark:text-zinc-300">
         Ninguna candidatura coincide con estos filtros.
       </p>
-      <Link href={APPLICATIONS_PATH} className={PRIMARY_LINK_CLASS}>
+      <Link href={APPLICATIONS_PATH} className={PRIMARY_BUTTON_CLASS}>
         Ver todas las candidaturas
       </Link>
     </div>

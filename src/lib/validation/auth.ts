@@ -19,17 +19,27 @@ export const AUTH_MESSAGES = {
   invalidForm: "Los datos del formulario no son válidos",
 } as const;
 
+const emailFormat = z.email();
+
 /**
- * Trimmed, lower-cased email. Checks abort in order (required, length,
- * format) so each field reports the most relevant message first.
+ * Trimmed, lower-cased email with a single message: required, too long or
+ * bad format, in that order. Each check skips the cases of the previous ones
+ * instead of using `abort` or `.pipe()`, which would also skip the
+ * object-level password match check of the signup form.
  */
 const emailSchema = z
   .string({ error: AUTH_MESSAGES.emailRequired })
   .trim()
   .toLowerCase()
-  .min(1, { error: AUTH_MESSAGES.emailRequired, abort: true })
-  .max(EMAIL_MAX_LENGTH, { error: AUTH_MESSAGES.emailTooLong, abort: true })
-  .pipe(z.email({ error: AUTH_MESSAGES.emailInvalid }));
+  .min(1, { error: AUTH_MESSAGES.emailRequired })
+  .max(EMAIL_MAX_LENGTH, { error: AUTH_MESSAGES.emailTooLong })
+  .refine(
+    (value) =>
+      value === "" ||
+      value.length > EMAIL_MAX_LENGTH ||
+      emailFormat.safeParse(value).success,
+    { error: AUTH_MESSAGES.emailInvalid },
+  );
 
 /** Login only checks presence and the bcrypt limit, so it does not reveal the policy. */
 const loginPasswordSchema = z

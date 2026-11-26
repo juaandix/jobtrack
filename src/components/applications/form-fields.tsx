@@ -1,7 +1,4 @@
-export const LABEL_CLASS =
-  "text-sm font-medium text-zinc-900 dark:text-zinc-100";
-export const CONTROL_CLASS =
-  "min-h-11 w-full min-w-0 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 focus-visible:border-blue-700 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-1 focus-visible:outline-none aria-invalid:border-red-700";
+import { CONTROL_CLASS, LABEL_CLASS } from "@/components/ui/classes";
 
 type BaseFieldProps = {
   id: string;

@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { ApplicationForm } from "@/components/applications/application-form";
 import { LoadingMessage } from "@/components/applications/page-states";
+import { PAGE_TITLE_CLASS } from "@/components/ui/classes";
 import { createApplicationAction } from "@/lib/applications/actions";
 import { newApplicationValues } from "@/lib/applications/form-state";
 import { todayIsoDate } from "@/lib/applications/labels";
@@ -16,6 +17,7 @@ async function NewApplicationForm() {
   await connection();
   return (
     <ApplicationForm
+      mode="create"
       action={createApplicationAction}
       initialValues={newApplicationValues(todayIsoDate(new Date()))}
       submitLabel="Guardar candidatura"
@@ -27,9 +29,7 @@ async function NewApplicationForm() {
 export default function NewApplicationPage() {
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-        Nueva candidatura
-      </h1>
+      <h1 className={PAGE_TITLE_CLASS}>Nueva candidatura</h1>
       <Suspense
         fallback={<LoadingMessage>Cargando formulario…</LoadingMessage>}
       >

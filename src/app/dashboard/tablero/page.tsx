@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
+import { PageHeader } from "@/components/applications/page-header";
 import {
   EmptyApplications,
-  PRIMARY_LINK_CLASS,
-} from "@/components/applications/application-list";
-import { LoadingMessage } from "@/components/applications/page-states";
-import { FormMessages } from "@/components/auth/form-messages";
+  LoadingMessage,
+} from "@/components/applications/page-states";
+import { FormMessages } from "@/components/forms/form-messages";
 import { KanbanBoard } from "@/components/kanban/kanban-board";
 import { listApplications } from "@/lib/applications/repository";
-import { NEW_APPLICATION_PATH } from "@/lib/applications/routes";
 
 export const metadata: Metadata = {
   title: "Tablero · JobTrack",
@@ -31,14 +29,7 @@ async function Board() {
 export default function BoardPage() {
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Tablero
-        </h1>
-        <Link href={NEW_APPLICATION_PATH} className={PRIMARY_LINK_CLASS}>
-          Nueva candidatura
-        </Link>
-      </div>
+      <PageHeader title="Tablero" />
       <Suspense fallback={<LoadingMessage>Cargando tablero…</LoadingMessage>}>
         <Board />
       </Suspense>

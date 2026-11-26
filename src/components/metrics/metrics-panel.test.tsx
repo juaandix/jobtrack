@@ -101,6 +101,48 @@ describe("MetricsPanel", () => {
     ).toEqual(["3", "0", "1", "1", "0", "0", "5"]);
   });
 
+  it("en pantallas pequeñas la misma tabla por portal se muestra como tarjetas", () => {
+    renderPanel();
+
+    const name = "Datos del gráfico: candidaturas por portal y estado";
+    const cards = screen.getByRole("list", { name });
+    // Only one of the two views is displayed at each width.
+    expect(cards).toHaveClass("sm:hidden");
+    expect(screen.getByRole("table", { name }).parentElement).toHaveClass(
+      "hidden",
+      "sm:block",
+    );
+
+    const items = within(cards).getAllByRole("listitem");
+    // One card per portal plus the totals.
+    expect(items).toHaveLength(8);
+
+    const linkedin = within(cards).getByRole("heading", { name: /^LinkedIn/ });
+    expect(linkedin).toHaveTextContent("LinkedIn3 candidaturas");
+    const linkedinCard = linkedin.closest("li");
+    if (linkedinCard === null) throw new Error("sin tarjeta de LinkedIn");
+    // Statuses at 0 are left out of the card.
+    expect(
+      within(linkedinCard)
+        .getAllByRole("term")
+        .map((term) => term.textContent),
+    ).toEqual(["Enviada", "Entrevista"]);
+    expect(
+      within(linkedinCard)
+        .getAllByRole("definition")
+        .map((value) => value.textContent),
+    ).toEqual(["2", "1"]);
+
+    const indeed = within(cards).getByRole("heading", { name: /^Indeed/ });
+    expect(indeed).toHaveTextContent("Indeed0 candidaturas");
+    expect(
+      within(indeed.closest("li") ?? cards).queryAllByRole("term"),
+    ).toEqual([]);
+
+    const total = within(cards).getByRole("heading", { name: /^Total/ });
+    expect(total).toHaveTextContent("Total5 candidaturas");
+  });
+
   it("cada gráfico tiene su sección con título y su tabla alternativa", () => {
     renderPanel();
 

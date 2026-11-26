@@ -2,13 +2,14 @@ import { useDraggable } from "@dnd-kit/core";
 import Link from "next/link";
 import { StatusSelect } from "./status-select";
 import { StatusBadge } from "@/components/applications/status-badge";
+import {
+  FOCUS_RING_CLASS,
+  SECONDARY_BUTTON_CLASS,
+} from "@/components/ui/classes";
 import { applicationName } from "@/lib/applications/kanban-a11y";
 import type { Application } from "@/lib/applications/repository";
 import { editApplicationPath } from "@/lib/applications/routes";
 import type { ApplicationStatus } from "@/lib/validation/application";
-
-const CONTROL_FOCUS =
-  "focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none";
 
 const CARD_CLASS =
   "flex min-w-0 flex-col gap-3 rounded-lg border border-zinc-300 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-950";
@@ -84,7 +85,7 @@ export function KanbanCard({
           {...attributes}
           {...listeners}
           aria-label={`Mover la candidatura de ${name}`}
-          className={`inline-flex min-h-11 min-w-11 shrink-0 cursor-grab touch-manipulation items-center justify-center rounded-md border border-zinc-400 text-zinc-800 hover:bg-zinc-100 aria-disabled:cursor-not-allowed aria-disabled:opacity-60 dark:text-zinc-200 dark:hover:bg-zinc-800 ${CONTROL_FOCUS}`}
+          className={`inline-flex min-h-11 min-w-11 shrink-0 cursor-grab touch-manipulation items-center justify-center rounded-md border border-zinc-400 text-zinc-800 hover:bg-zinc-100 aria-disabled:cursor-not-allowed aria-disabled:opacity-60 dark:text-zinc-200 dark:hover:bg-zinc-800 ${FOCUS_RING_CLASS}`}
         >
           <GripIcon />
         </button>
@@ -107,7 +108,7 @@ export function KanbanCard({
       <Link
         href={editApplicationPath(application.id)}
         aria-label={`Editar la candidatura de ${name}`}
-        className={`inline-flex min-h-11 items-center justify-center rounded-md border border-zinc-400 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800 ${CONTROL_FOCUS}`}
+        className={`${SECONDARY_BUTTON_CLASS} text-sm`}
       >
         Editar
       </Link>

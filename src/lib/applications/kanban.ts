@@ -33,14 +33,10 @@ export type StatusChange = {
 export function groupByStatus(
   applications: readonly Application[],
 ): KanbanColumn[] {
-  const columns = new Map<ApplicationStatus, Application[]>(
-    APPLICATION_STATUSES.map((status) => [status, []]),
-  );
-  for (const application of applications) {
-    columns.get(application.status)?.push(application);
-  }
   return APPLICATION_STATUSES.map((status) => {
-    const items = columns.get(status) ?? [];
+    const items = applications.filter(
+      (application) => application.status === status,
+    );
     return { status, applications: items, count: items.length };
   });
 }

@@ -1,8 +1,12 @@
 import type { ApplicationField } from "./errors";
 import type { Application } from "./repository";
-import { readFormFields } from "@/lib/auth/form-state";
-import { APPLICATION_FIELDS } from "@/lib/validation/application";
-import type { FieldErrors } from "@/lib/validation/errors";
+import { readFormFields } from "@/lib/forms/fields";
+import {
+  APPLICATION_FIELDS,
+  applicationCreateSchema,
+  applicationUpdateSchema,
+} from "@/lib/validation/application";
+import { fieldErrors, type FieldErrors } from "@/lib/validation/errors";
 
 /** Raw text of each form field, as the user typed it. */
 export type ApplicationFormValues = Partial<Record<ApplicationField, string>>;
@@ -57,4 +61,22 @@ export function initialApplicationFormState(
  */
 export function readApplicationForm(formData: FormData): ApplicationFormValues {
   return readFormFields(formData, APPLICATION_FIELDS);
+}
+
+/** The form creates a new application or edits an existing one. */
+export type ApplicationFormMode = "create" | "update";
+
+/**
+ * Validates the form values in the browser with the same schema the Server
+ * Action of each mode uses (VAL-01): `null` if they are valid, otherwise the
+ * errors by field (empty when the only problem is not tied to a field).
+ */
+export function applicationFormErrors(
+  mode: ApplicationFormMode,
+  values: ApplicationFormValues,
+): FieldErrors<ApplicationField> | null {
+  const schema =
+    mode === "create" ? applicationCreateSchema : applicationUpdateSchema;
+  const result = schema.safeParse(values);
+  return result.success ? null : fieldErrors(result.error, APPLICATION_FIELDS);
 }

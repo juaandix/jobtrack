@@ -5,6 +5,15 @@ export function visible(page: Page, name: string) {
   return page.getByText(name, { exact: true }).filter({ visible: true });
 }
 
+/**
+ * A form field by its exact label, among the visible ones: with
+ * cacheComponents a form visited before (e.g. "Nueva candidatura" when
+ * editing) stays mounted but hidden.
+ */
+export function field(page: Page, label: string) {
+  return page.getByLabel(label, { exact: true }).filter({ visible: true });
+}
+
 export async function expectNoHorizontalScroll(page: Page): Promise<void> {
   const overflow = await page.evaluate(
     () =>
@@ -20,11 +29,9 @@ export async function createApplication(
   { company, status }: { company: string; status: string },
 ): Promise<void> {
   await page.getByRole("link", { name: "Nueva candidatura" }).click();
-  await page.getByLabel("Empresa", { exact: true }).fill(company);
-  await page.getByLabel("Puesto", { exact: true }).fill("Desarrollador");
-  await page
-    .getByLabel("Estado", { exact: true })
-    .selectOption({ label: status });
+  await field(page, "Empresa").fill(company);
+  await field(page, "Puesto").fill("Desarrollador");
+  await field(page, "Estado").selectOption({ label: status });
   await page.getByRole("button", { name: "Guardar candidatura" }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(visible(page, company)).toBeVisible();

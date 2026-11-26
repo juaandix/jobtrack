@@ -210,3 +210,15 @@ export function buildMetrics(
     statusTotals: countByStatus(applications),
   };
 }
+
+/**
+ * The statuses with at least one application, in the order of the SQL enum,
+ * with their count: the compact view of a portal on small screens.
+ */
+export function nonZeroStatuses(
+  counts: StatusCounts,
+): { status: ApplicationStatus; count: number }[] {
+  return APPLICATION_STATUSES.filter((status) => counts[status] > 0).map(
+    (status) => ({ status, count: counts[status] }),
+  );
+}

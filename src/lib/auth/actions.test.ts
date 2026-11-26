@@ -97,10 +97,9 @@ describe("login", () => {
     expect(state.values).toEqual({ email: "Ana@Example.com " });
     expect(JSON.stringify(state)).not.toContain(PASSWORD);
     expect(redirect).not.toHaveBeenCalled();
-    expect(consoleError).toHaveBeenCalledWith(
-      "[auth] login failed",
-      "invalid_credentials",
-    );
+    expect(consoleError).toHaveBeenCalledWith("[auth] login failed", {
+      code: "invalid_credentials",
+    });
   });
 
   it("con un error desconocido devuelve el mensaje genérico", async () => {
@@ -116,7 +115,12 @@ describe("login", () => {
     );
 
     expect(state.formError).toBe(AUTH_ERROR_MESSAGES.generic);
-    expect(consoleError).toHaveBeenCalledWith("[auth] login failed", failure);
+    // Only name and message of the error, not the object itself.
+    expect(consoleError).toHaveBeenCalledWith("[auth] login failed", {
+      name: "Error",
+      message: "fetch failed",
+    });
+    expect(consoleError.mock.calls[0]?.[1]).not.toBe(failure);
   });
 
   it("si va bien redirige al next interno", async () => {
@@ -256,9 +260,8 @@ describe("logout", () => {
     auth.signOut.mockResolvedValue({ error: { code: "session_not_found" } });
 
     await expect(logout()).rejects.toThrow("NEXT_REDIRECT /login");
-    expect(consoleError).toHaveBeenCalledWith(
-      "[auth] logout failed",
-      "session_not_found",
-    );
+    expect(consoleError).toHaveBeenCalledWith("[auth] logout failed", {
+      code: "session_not_found",
+    });
   });
 });

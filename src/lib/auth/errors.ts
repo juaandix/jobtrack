@@ -53,3 +53,31 @@ export function authErrorMessage(error: unknown, flow: AuthFlow): string {
     AUTH_ERROR_MESSAGES.generic
   );
 }
+
+const LOGGED_FIELDS = ["name", "code", "message"] as const;
+
+const loggableError = z.object({
+  name: z.unknown().optional(),
+  code: z.unknown().optional(),
+  message: z.unknown().optional(),
+});
+
+export type AuthErrorLog = Partial<
+  Record<(typeof LOGGED_FIELDS)[number], string>
+>;
+
+/**
+ * What may be logged of an auth error: only its `name`, `code` and `message`
+ * when they are strings, never the whole object (it can carry the request or
+ * the user's data). Anything that is not an object logs as `{}`.
+ */
+export function authErrorLog(error: unknown): AuthErrorLog {
+  const result: AuthErrorLog = {};
+  const parsed = loggableError.safeParse(error);
+  if (!parsed.success) return result;
+  for (const field of LOGGED_FIELDS) {
+    const value = parsed.data[field];
+    if (typeof value === "string") result[field] = value;
+  }
+  return result;
+}

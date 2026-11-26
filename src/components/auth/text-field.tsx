@@ -1,3 +1,5 @@
+import { CONTROL_CLASS, LABEL_CLASS } from "@/components/ui/classes";
+
 type TextFieldProps = {
   id: string;
   name: string;
@@ -32,10 +34,7 @@ export function TextField({
 
   return (
     <div className="flex flex-col gap-1">
-      <label
-        htmlFor={id}
-        className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
-      >
+      <label htmlFor={id} className={LABEL_CLASS}>
         {label}
       </label>
       <input
@@ -47,7 +46,7 @@ export function TextField({
         required
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
-        className="min-h-11 rounded-md border border-zinc-400 bg-white px-3 py-2 text-base text-zinc-900 focus-visible:border-blue-700 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-1 focus-visible:outline-none aria-invalid:border-red-700"
+        className={CONTROL_CLASS}
       />
       {hint ? (
         <p id={hintId} className="text-sm text-zinc-700 dark:text-zinc-300">

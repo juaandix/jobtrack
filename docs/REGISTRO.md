@@ -139,3 +139,11 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Notas: `src/lib/metrics/` (semana ISO verificada por Testing contra Python en 1990–2050); respondida = estado ≠ "enviada"; "Procesos activos" = en_proceso + entrevista; serie de las últimas 12 semanas (Europe/Madrid); gráficos `aria-hidden` con tablas visibles como alternativa; `recharts@3.11.1`. Corrección del orquestador: el ejemplo del brief "2027-01-01 en semana 1" era erróneo (es 2026-W53). Posible test intermitente en `test:coverage` (1 fallo en 1 ejecución, no reproducido). Pendientes para el hito 8: tooltip blanco en modo oscuro; vista móvil de la tabla portal × estado; mover `EmptyApplications`/`PRIMARY_LINK_CLASS` a un módulo compartido.
 
 **Hito 7 cerrado** — 1 ciclo, aprobado en la ronda 2.
+
+## Hito 8 — Pulido
+
+### 8.1 + 8.2 — Revisión responsive, estados, not-found, pendientes acumulados y capturas
+- Ronda 1: APROBADO (e2e 22 passed; db:test:rls 15 PASS; `npm run screenshots` 10 PNG)
+- Commit: feat(ui): polish responsive layouts, dark mode and states, resolve pending follow-ups and add screenshots
+- Notas: módulos compartidos `src/components/ui/classes.ts`, `src/components/forms/`, `src/lib/forms/`; not-found y error globales; anuncio "Candidatura borrada" (`aria-live`) + foco al h1; edición valida con `applicationUpdateSchema` (prop `mode`); ids con `useId`; tablero `max-w-screen-2xl`; métricas en tarjetas < sm; refine de contraseñas con email vacío corregido; `logAuthError` solo name/code/message; `server-only@0.0.1` en repository; TS-02 con `scripts/find-explicit-any.sh`; capturas versionadas en `docs/screenshots/` con `npm run screenshots` (fuera de `npm run e2e`). Develop hizo por error un `git rm` y un `git stash` y los deshizo; el orquestador verificó índice y stash vacíos.
+- Limitación conocida (pendiente de confirmar por el usuario; por defecto se acepta): sin JavaScript las páginas privadas se quedan en "Cargando…" (cacheComponents + streaming). El e2e sin JS comprueba que la URL del GET filtra en el servidor. Ninguna directriz exige funcionar sin JS.

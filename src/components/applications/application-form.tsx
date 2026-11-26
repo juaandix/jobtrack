@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState, type FormEvent } from "react";
-import {
-  FormMessages,
-  focusFirstInvalidField,
-} from "@/components/auth/form-messages";
+import { useActionState, useId, useState, type FormEvent } from "react";
 import { InputField, SelectField, TextAreaField } from "./form-fields";
+import { focusFirstInvalidField } from "@/components/forms/focus-first-invalid-field";
+import { FormMessages } from "@/components/forms/form-messages";
+import {
+  PRIMARY_BUTTON_CLASS,
+  SECONDARY_BUTTON_CLASS,
+} from "@/components/ui/classes";
 import type { ApplicationField } from "@/lib/applications/errors";
 import {
+  applicationFormErrors,
   initialApplicationFormState,
   readApplicationForm,
+  type ApplicationFormMode,
   type ApplicationFormState,
   type ApplicationFormValues,
 } from "@/lib/applications/form-state";
@@ -21,9 +25,8 @@ import {
   APPLICATION_MESSAGES,
   APPLICATION_PORTALS,
   APPLICATION_STATUSES,
-  applicationCreateSchema,
 } from "@/lib/validation/application";
-import { fieldErrors, type FieldErrors } from "@/lib/validation/errors";
+import type { FieldErrors } from "@/lib/validation/errors";
 
 const PORTAL_OPTIONS = APPLICATION_PORTALS.map((value) => ({
   value,
@@ -36,6 +39,8 @@ const STATUS_OPTIONS = APPLICATION_STATUSES.map((value) => ({
 }));
 
 type ApplicationFormProps = {
+  /** Picks the schema of the client validation, the same as the action's. */
+  mode: ApplicationFormMode;
   /** Create action, or the update action with the id already bound. */
   action: (
     previous: ApplicationFormState,
@@ -48,10 +53,13 @@ type ApplicationFormProps = {
 
 /**
  * Single form to create and edit an application. It validates with the same
- * Zod schema as the server before submitting (VAL-01); the server validates
- * again and its errors are shown the same way.
+ * Zod schema as the server action of its mode before submitting (VAL-01);
+ * the server validates again and its errors are shown the same way. Field ids
+ * come from `useId`: with cacheComponents a visited form can stay mounted
+ * (hidden) next to the other one.
  */
 export function ApplicationForm({
+  mode,
   action,
   initialValues,
   submitLabel,
@@ -65,6 +73,7 @@ export function ApplicationForm({
   // passes the client validation and reaches the server.
   const [clientErrors, setClientErrors] =
     useState<FieldErrors<ApplicationField> | null>(null);
+  const id = useId();
 
   const errors = clientErrors ?? state.fieldErrors;
   const formError = clientErrors
@@ -74,16 +83,13 @@ export function ApplicationForm({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     const form = event.currentTarget;
-    const result = applicationCreateSchema.safeParse(
+    const nextErrors = applicationFormErrors(
+      mode,
       readApplicationForm(new FormData(form)),
     );
-    if (result.success) {
-      setClientErrors(null);
-      return;
-    }
-    event.preventDefault();
-    const nextErrors = fieldErrors(result.error, APPLICATION_FIELDS);
     setClientErrors(nextErrors);
+    if (nextErrors === null) return;
+    event.preventDefault();
     focusFirstInvalidField(form, APPLICATION_FIELDS, nextErrors);
   }
 
@@ -97,7 +103,7 @@ export function ApplicationForm({
       <FormMessages error={formError} />
       <div className="grid gap-4 sm:grid-cols-2">
         <InputField
-          id="application-company"
+          id={`${id}-company`}
           name="company"
           label="Empresa"
           type="text"
@@ -107,7 +113,7 @@ export function ApplicationForm({
           error={errors.company}
         />
         <InputField
-          id="application-position"
+          id={`${id}-position`}
           name="position"
           label="Puesto"
           type="text"
@@ -117,7 +123,7 @@ export function ApplicationForm({
           error={errors.position}
         />
         <SelectField
-          id="application-status"
+          id={`${id}-status`}
           name="status"
           label="Estado"
           options={STATUS_OPTIONS}
@@ -126,7 +132,7 @@ export function ApplicationForm({
           error={errors.status}
         />
         <SelectField
-          id="application-portal"
+          id={`${id}-portal`}
           name="portal"
           label="Portal"
           options={PORTAL_OPTIONS}
@@ -135,7 +141,7 @@ export function ApplicationForm({
           error={errors.portal}
         />
         <InputField
-          id="application-applied-at"
+          id={`${id}-applied-at`}
           name="applied_at"
           label="Fecha de la candidatura"
           type="date"
@@ -144,7 +150,7 @@ export function ApplicationForm({
           error={errors.applied_at}
         />
         <InputField
-          id="application-offer-url"
+          id={`${id}-offer-url`}
           name="offer_url"
           label="Enlace a la oferta"
           type="url"
@@ -155,7 +161,7 @@ export function ApplicationForm({
           error={errors.offer_url}
         />
         <InputField
-          id="application-salary-min"
+          id={`${id}-salary-min`}
           name="salary_min"
           label="Salario mínimo"
           type="text"
@@ -166,7 +172,7 @@ export function ApplicationForm({
           error={errors.salary_min}
         />
         <InputField
-          id="application-salary-max"
+          id={`${id}-salary-max`}
           name="salary_max"
           label="Salario máximo"
           type="text"
@@ -178,23 +184,20 @@ export function ApplicationForm({
         />
       </div>
       <TextAreaField
-        id="application-notes"
+        id={`${id}-notes`}
         name="notes"
         label="Notas"
         defaultValue={values.notes}
         error={errors.notes}
       />
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Link
-          href={APPLICATIONS_PATH}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-zinc-400 px-4 py-2 font-medium text-zinc-900 hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none dark:text-zinc-50 dark:hover:bg-zinc-800"
-        >
+        <Link href={APPLICATIONS_PATH} className={SECONDARY_BUTTON_CLASS}>
           Cancelar
         </Link>
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-zinc-500"
+          className={PRIMARY_BUTTON_CLASS}
         >
           {pending ? pendingLabel : submitLabel}
         </button>

@@ -9,3 +9,11 @@ export const NEW_APPLICATION_PATH = `${DASHBOARD_PATH}/candidaturas/nueva`;
 export function editApplicationPath(id: string): string {
   return `${DASHBOARD_PATH}/candidaturas/${encodeURIComponent(id)}/editar`;
 }
+
+/**
+ * Whether a private page uses a wider content area than the default one:
+ * the board, so its six columns fit side by side on desktop screens.
+ */
+export function usesWideLayout(pathname: string): boolean {
+  return pathname === BOARD_PATH;
+}

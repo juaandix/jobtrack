@@ -90,10 +90,34 @@ test("las métricas muestran los KPI y las tablas de los gráficos", async ({
     }
   });
 
-  await test.step("tabla alternativa del gráfico por portal", async () => {
-    const portals = page.getByRole("table", {
-      name: "Datos del gráfico: candidaturas por portal y estado",
-    });
+  await test.step("alternativa textual del gráfico por portal", async () => {
+    const name = "Datos del gráfico: candidaturas por portal y estado";
+    const narrow = (page.viewportSize()?.width ?? 0) < 640;
+
+    if (narrow) {
+      // Below `sm`: one card per portal instead of the eight-column table.
+      await expect(page.getByRole("table", { name })).toBeHidden();
+      const cards = page.getByRole("list", { name });
+      await expect(cards).toBeVisible();
+      const total = cards
+        .getByRole("listitem")
+        .filter({ has: page.getByRole("heading", { name: /^Total/ }) });
+      await expect(total).toBeVisible();
+      if (isNew) {
+        await expect(total.getByRole("heading")).toHaveText(
+          /Total\s*2 candidaturas/,
+        );
+        await expect(total.getByRole("term")).toHaveText([
+          "Enviada",
+          "Entrevista",
+        ]);
+        await expect(total.getByRole("definition")).toHaveText(["1", "1"]);
+      }
+      return;
+    }
+
+    await expect(page.getByRole("list", { name })).toBeHidden();
+    const portals = page.getByRole("table", { name });
     await expect(portals).toBeVisible();
     await expect(
       portals.getByRole("columnheader", { name: "Rechazada por mí" }),

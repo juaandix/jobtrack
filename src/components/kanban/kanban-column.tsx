@@ -32,7 +32,7 @@ export function KanbanColumn({
     <section
       ref={setNodeRef}
       aria-label={columnLabel(column.status, column.count)}
-      className={`flex w-72 shrink-0 flex-col gap-3 rounded-lg border bg-zinc-50 p-3 dark:bg-zinc-900 ${
+      className={`flex w-72 shrink-0 flex-col gap-3 rounded-lg border bg-zinc-50 p-3 xl:w-auto xl:min-w-0 xl:flex-1 dark:bg-zinc-900 ${
         isOver
           ? "border-blue-700 ring-2 ring-blue-700"
           : "border-zinc-300 dark:border-zinc-700"

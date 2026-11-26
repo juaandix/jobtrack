@@ -9,16 +9,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  AXIS_TICK,
-  TOOLTIP_CONTENT_STYLE,
-  TOOLTIP_ITEM_STYLE,
-  WEEKLY_BAR_COLOR,
-} from "./chart-theme";
+import { AXIS_TICK, WEEKLY_BAR_COLOR } from "./chart-theme";
+import { ChartTooltip } from "./chart-tooltip";
 import type { WeeklyPoint } from "@/lib/metrics/metrics";
 
-function weekTooltipLabel(label: unknown): string {
-  return `Semana del ${String(label)}`;
+function weekTooltipLabel(label: string): string {
+  return `Semana del ${label}`;
 }
 
 /**
@@ -43,9 +39,14 @@ export function WeeklyChart({ weeks }: { weeks: readonly WeeklyPoint[] }) {
           <YAxis allowDecimals={false} tick={AXIS_TICK} tickLine={false} />
           <Tooltip
             cursor={{ fillOpacity: 0.1 }}
-            contentStyle={TOOLTIP_CONTENT_STYLE}
-            itemStyle={TOOLTIP_ITEM_STYLE}
-            labelFormatter={weekTooltipLabel}
+            content={({ active, label, payload }) => (
+              <ChartTooltip
+                active={active}
+                label={label}
+                payload={payload}
+                formatLabel={weekTooltipLabel}
+              />
+            )}
           />
           <Bar
             dataKey="count"

@@ -321,6 +321,27 @@ describe("signupSchema", () => {
     ]);
   });
 
+  it("reports the mismatch even when the email is empty, too long or invalid", () => {
+    for (const [email, emailMessage] of [
+      ["", AUTH_MESSAGES.emailRequired],
+      ["   ", AUTH_MESSAGES.emailRequired],
+      [`${"a".repeat(250)}@example.com`, AUTH_MESSAGES.emailTooLong],
+      ["no-es-un-email", AUTH_MESSAGES.emailInvalid],
+    ] as const) {
+      const error = expectFailure(
+        signupSchema.safeParse({
+          email,
+          password: "secreta1",
+          confirmPassword: "secreta2",
+        }),
+      );
+      expect(messagesFor(error, "email")).toEqual([emailMessage]);
+      expect(messagesFor(error, "confirmPassword")).toEqual([
+        AUTH_MESSAGES.passwordsDoNotMatch,
+      ]);
+    }
+  });
+
   it("does not report a mismatch when a password is missing", () => {
     const error = expectFailure(
       signupSchema.safeParse({ ...valid, password: "" }),

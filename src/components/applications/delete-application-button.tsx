@@ -1,7 +1,15 @@
 "use client";
 
-import { useActionState, useEffect, useId, useRef } from "react";
+import { useActionState, useId, useRef } from "react";
+import { useAnnounceDeletion } from "./deletion-announcer";
+import {
+  DANGER_BUTTON_CLASS,
+  DANGER_OUTLINE_BUTTON_CLASS,
+  ERROR_MESSAGE_CLASS,
+  SECONDARY_BUTTON_CLASS,
+} from "@/components/ui/classes";
 import { deleteApplicationAction } from "@/lib/applications/actions";
+import { applicationDeletedMessage } from "@/lib/applications/announcements";
 import type { DeleteApplicationState } from "@/lib/applications/form-state";
 
 type DeleteApplicationButtonProps = {
@@ -10,36 +18,41 @@ type DeleteApplicationButtonProps = {
   position: string;
 };
 
-const BUTTON_BASE =
-  "min-h-11 rounded-md px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none";
-
 /**
  * "Borrar" button that asks for confirmation in a native modal `<dialog>`:
  * the browser traps the focus inside and closes it with Escape. The focus
  * starts on "Cancelar" (the safe choice) and goes back to the trigger when
- * the dialog closes.
+ * the dialog is dismissed. After a deletion the row disappears, so the
+ * page's `DeletionAnnouncer` announces it and takes the focus instead.
  */
 export function DeleteApplicationButton({
   id,
   company,
   position,
 }: DeleteApplicationButtonProps) {
-  const [state, formAction, pending] = useActionState<
-    DeleteApplicationState,
-    FormData
-  >(deleteApplicationAction, null);
+  const announceDeletion = useAnnounceDeletion();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const deletedRef = useRef(false);
   const titleId = useId();
   const descriptionId = useId();
-  const deleted = state?.ok === true;
 
-  useEffect(() => {
-    if (deleted) {
+  async function deleteAndAnnounce(
+    previous: DeleteApplicationState,
+    formData: FormData,
+  ): Promise<DeleteApplicationState> {
+    const result = await deleteApplicationAction(previous, formData);
+    if (result?.ok) {
+      // Closed before announcing: the focus cannot leave an open modal.
+      deletedRef.current = true;
       dialogRef.current?.close();
+      announceDeletion?.(applicationDeletedMessage({ company, position }));
     }
-  }, [deleted]);
+    return result;
+  }
+
+  const [state, formAction, pending] = useActionState(deleteAndAnnounce, null);
 
   function open(): void {
     dialogRef.current?.showModal();
@@ -50,6 +63,10 @@ export function DeleteApplicationButton({
     dialogRef.current?.close();
   }
 
+  function handleClose(): void {
+    if (!deletedRef.current) triggerRef.current?.focus();
+  }
+
   return (
     <>
       <button
@@ -57,7 +74,7 @@ export function DeleteApplicationButton({
         type="button"
         onClick={open}
         aria-label={`Borrar la candidatura de ${position} en ${company}`}
-        className={`${BUTTON_BASE} border border-red-700 text-red-800 hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-950`}
+        className={`${DANGER_OUTLINE_BUTTON_CLASS} text-sm`}
       >
         Borrar
       </button>
@@ -65,7 +82,7 @@ export function DeleteApplicationButton({
         ref={dialogRef}
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
-        onClose={() => triggerRef.current?.focus()}
+        onClose={handleClose}
         className="m-auto w-[calc(100%-2rem)] max-w-md rounded-lg bg-white p-6 text-zinc-900 shadow-xl backdrop:bg-zinc-950/50 dark:bg-zinc-900 dark:text-zinc-50"
       >
         <h2 id={titleId} className="text-lg font-semibold">
@@ -79,10 +96,7 @@ export function DeleteApplicationButton({
           se puede deshacer.
         </p>
         {state?.ok === false ? (
-          <p
-            role="alert"
-            className="mt-4 rounded-md border border-red-700 bg-red-50 px-3 py-2 text-sm text-red-800"
-          >
+          <p role="alert" className={`mt-4 ${ERROR_MESSAGE_CLASS}`}>
             {state.message}
           </p>
         ) : null}
@@ -95,14 +109,14 @@ export function DeleteApplicationButton({
             type="button"
             ref={cancelRef}
             onClick={close}
-            className={`${BUTTON_BASE} border border-zinc-400 text-zinc-900 hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800`}
+            className={`${SECONDARY_BUTTON_CLASS} text-sm`}
           >
             Cancelar
           </button>
           <button
             type="submit"
             disabled={pending}
-            className={`${BUTTON_BASE} bg-red-700 text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:bg-zinc-500`}
+            className={`${DANGER_BUTTON_CLASS} text-sm`}
           >
             {pending ? "Borrando…" : "Sí, borrar"}
           </button>

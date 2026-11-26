@@ -6,13 +6,15 @@ import { login } from "@/lib/auth/actions";
 import {
   INITIAL_LOGIN_STATE,
   LOGIN_FIELDS,
-  readFormFields,
   type LoginField,
 } from "@/lib/auth/form-state";
 import { NEXT_PARAM, SIGNUP_PATH, withNextParam } from "@/lib/auth/routes";
 import { loginSchema } from "@/lib/validation/auth";
 import { fieldErrors, type FieldErrors } from "@/lib/validation/errors";
-import { FormMessages, focusFirstInvalidField } from "./form-messages";
+import { focusFirstInvalidField } from "@/components/forms/focus-first-invalid-field";
+import { FormMessages } from "@/components/forms/form-messages";
+import { PRIMARY_BUTTON_CLASS, TEXT_LINK_CLASS } from "@/components/ui/classes";
+import { readFormFields } from "@/lib/forms/fields";
 import { TextField } from "./text-field";
 
 type LoginFormProps = {
@@ -74,18 +76,14 @@ export function LoginForm({ next }: LoginFormProps) {
         autoComplete="current-password"
         error={errors.password}
       />
-      <button
-        type="submit"
-        disabled={pending}
-        className="min-h-11 rounded-md bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-zinc-500"
-      >
+      <button type="submit" disabled={pending} className={PRIMARY_BUTTON_CLASS}>
         {pending ? "Entrando…" : "Iniciar sesión"}
       </button>
       <p className="text-sm text-zinc-700 dark:text-zinc-300">
         ¿No tienes cuenta?{" "}
         <Link
           href={withNextParam(SIGNUP_PATH, next)}
-          className="font-medium text-blue-700 underline underline-offset-2 hover:text-blue-800 focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:outline-none dark:text-blue-400 dark:hover:text-blue-300"
+          className={TEXT_LINK_CLASS}
         >
           Regístrate
         </Link>

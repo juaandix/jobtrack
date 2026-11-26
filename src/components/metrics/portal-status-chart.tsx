@@ -10,12 +10,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  AXIS_TICK,
-  STATUS_COLORS,
-  TOOLTIP_CONTENT_STYLE,
-  TOOLTIP_ITEM_STYLE,
-} from "./chart-theme";
+import { AXIS_TICK, STATUS_COLORS } from "./chart-theme";
+import { ChartTooltip } from "./chart-tooltip";
 import { PORTAL_LABELS, STATUS_LABELS } from "@/lib/applications/labels";
 import type { PortalStatusRow } from "@/lib/metrics/metrics";
 import { APPLICATION_STATUSES } from "@/lib/validation/application";
@@ -66,8 +62,9 @@ export function PortalStatusChart({
           />
           <Tooltip
             cursor={{ fillOpacity: 0.1 }}
-            contentStyle={TOOLTIP_CONTENT_STYLE}
-            itemStyle={TOOLTIP_ITEM_STYLE}
+            content={({ active, label, payload }) => (
+              <ChartTooltip active={active} label={label} payload={payload} />
+            )}
           />
           <Legend formatter={legendText} itemSorter={null} />
           {APPLICATION_STATUSES.map((status) => (

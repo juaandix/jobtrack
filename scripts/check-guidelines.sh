@@ -138,8 +138,13 @@ fi
 
 # --- TS ----------------------------------------------------------------------
 
-check_absent "TS-02" "uso de any" \
-  ":[[:space:]]*any${B_END}|<any>|${B_START}as any${B_END}|${B_START}any\[\]" src e2e
+# Same pattern as DIRECTRICES, but outside comments (see the script).
+ts02=$(bash scripts/find-explicit-any.sh src e2e)
+if [ -z "$ts02" ]; then
+  ok "TS-02"
+else
+  fail "TS-02" "uso de any" "$ts02"
+fi
 
 check_absent "TS-03" "aserción 'as unknown as'" 'as unknown as' src
 

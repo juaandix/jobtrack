@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useTransition } from "react";
-import { CONTROL_CLASS, LABEL_CLASS } from "./form-fields";
+import {
+  CONTROL_CLASS,
+  LABEL_CLASS,
+  PRIMARY_BUTTON_CLASS,
+  SECONDARY_BUTTON_CLASS,
+} from "@/components/ui/classes";
 import {
   FILTER_PARAMS,
   applicationFiltersHref,
@@ -17,11 +22,6 @@ import {
   APPLICATION_PORTALS,
   APPLICATION_STATUSES,
 } from "@/lib/validation/application";
-
-const BUTTON_BASE =
-  "inline-flex min-h-11 items-center justify-center rounded-md px-4 py-2 font-medium focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 focus-visible:outline-none";
-const SUBMIT_CLASS = `${BUTTON_BASE} bg-blue-700 text-white hover:bg-blue-800`;
-const CLEAR_CLASS = `${BUTTON_BASE} border border-zinc-400 text-zinc-900 hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800`;
 
 /**
  * Filters of the list. It is a plain GET form, so it works without
@@ -130,11 +130,11 @@ export function ApplicationFilterBar({
         </select>
       </div>
       <div className="flex flex-wrap gap-2 sm:col-span-2 lg:col-span-1">
-        <button type="submit" className={SUBMIT_CLASS}>
+        <button type="submit" className={PRIMARY_BUTTON_CLASS}>
           {pending ? "Filtrando…" : "Filtrar"}
         </button>
         {hasActiveFilters(filters) ? (
-          <Link href={APPLICATIONS_PATH} className={CLEAR_CLASS}>
+          <Link href={APPLICATIONS_PATH} className={SECONDARY_BUTTON_CLASS}>
             Limpiar filtros
           </Link>
         ) : null}

@@ -1,12 +1,17 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApplicationForm } from "./application-form";
 import {
   newApplicationValues,
+  type ApplicationFormMode,
   type ApplicationFormState,
 } from "@/lib/applications/form-state";
-import { APPLICATION_MESSAGES } from "@/lib/validation/application";
+import {
+  APPLICATION_MESSAGES,
+  applicationCreateSchema,
+  applicationUpdateSchema,
+} from "@/lib/validation/application";
 
 const action =
   vi.fn<
@@ -16,10 +21,14 @@ const action =
     ) => Promise<ApplicationFormState>
   >();
 
-function setup(values = newApplicationValues("2026-11-25")) {
+function setup(
+  values = newApplicationValues("2026-11-25"),
+  mode: ApplicationFormMode = "create",
+) {
   const user = userEvent.setup();
   render(
     <ApplicationForm
+      mode={mode}
       action={action}
       initialValues={values}
       submitLabel="Guardar candidatura"
@@ -58,6 +67,10 @@ function failedState(
 describe("ApplicationForm", () => {
   beforeEach(() => {
     action.mockReset();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("al crear precarga la fecha de hoy y los valores por defecto", () => {
@@ -242,5 +255,74 @@ describe("ApplicationForm", () => {
       "href",
       "/dashboard",
     );
+  });
+
+  it("al crear valida en el navegador con el esquema de creación", async () => {
+    const createParse = vi.spyOn(applicationCreateSchema, "safeParse");
+    const updateParse = vi.spyOn(applicationUpdateSchema, "safeParse");
+    const { user, submit } = setup();
+
+    await user.click(submit);
+
+    expect(createParse).toHaveBeenCalledTimes(1);
+    expect(updateParse).not.toHaveBeenCalled();
+  });
+
+  it("al editar valida en el navegador con el esquema de edición", async () => {
+    const createParse = vi.spyOn(applicationCreateSchema, "safeParse");
+    const updateParse = vi.spyOn(applicationUpdateSchema, "safeParse");
+    action.mockResolvedValue(failedState({}));
+    const { user, company, submit } = setup(
+      {
+        company: "Acme",
+        position: "Frontend",
+        status: "entrevista",
+        portal: "linkedin",
+        applied_at: "2026-11-01",
+      },
+      "update",
+    );
+
+    await user.clear(company);
+    await user.click(submit);
+
+    expect(updateParse).toHaveBeenCalledTimes(1);
+    expect(createParse).not.toHaveBeenCalled();
+    expect(action).not.toHaveBeenCalled();
+    expect(company).toHaveAccessibleDescription(
+      APPLICATION_MESSAGES.companyRequired,
+    );
+
+    await user.type(company, "Globex");
+    await user.click(submit);
+
+    expect(updateParse).toHaveBeenCalledTimes(2);
+    expect(action).toHaveBeenCalledTimes(1);
+  });
+
+  it("dos formularios montados a la vez no repiten ids", () => {
+    const values = newApplicationValues("2026-11-25");
+    render(
+      <>
+        {(["create", "update"] as const).map((mode) => (
+          <ApplicationForm
+            key={mode}
+            mode={mode}
+            action={action}
+            initialValues={values}
+            submitLabel="Guardar"
+            pendingLabel="Guardando…"
+          />
+        ))}
+      </>,
+    );
+
+    const statuses = screen.getAllByLabelText("Estado");
+    expect(statuses).toHaveLength(2);
+    const ids = new Set(
+      [...document.querySelectorAll("[id]")].map((element) => element.id),
+    );
+    expect(ids.size).toBe(document.querySelectorAll("[id]").length);
+    expect(statuses[0]?.id).not.toBe(statuses[1]?.id);
   });
 });

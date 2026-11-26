@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { LoginForm } from "@/components/auth/login-form";
+import { PAGE_TITLE_CLASS } from "@/components/ui/classes";
 import { nextFromSearchParams } from "@/lib/auth/routes";
 
 export const metadata: Metadata = {
@@ -16,9 +17,7 @@ async function LoginFormWithNext({
 export default function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-        Iniciar sesión
-      </h1>
+      <h1 className={PAGE_TITLE_CLASS}>Iniciar sesión</h1>
       <Suspense
         fallback={
           <p className="text-zinc-700 dark:text-zinc-300">

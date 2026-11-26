@@ -20,6 +20,7 @@ import {
 import { useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { KanbanCardPreview } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
+import { ERROR_MESSAGE_CLASS } from "@/components/ui/classes";
 import { updateStatusAction } from "@/lib/applications/actions";
 import {
   APPLICATION_ERROR_MESSAGES,
@@ -193,10 +194,7 @@ export function KanbanBoard({
   return (
     <>
       {error ? (
-        <p
-          role="alert"
-          className="rounded-md border border-red-700 bg-red-50 px-3 py-2 text-sm text-red-800"
-        >
+        <p role="alert" className={ERROR_MESSAGE_CLASS}>
           {error}
         </p>
       ) : null}
@@ -216,7 +214,7 @@ export function KanbanBoard({
         onDragCancel={() => setDragged(null)}
       >
         <div className="relative w-full min-w-0 overflow-x-auto overscroll-x-contain pb-3">
-          <div className="flex w-max gap-3">
+          <div className="flex w-max gap-3 xl:w-full">
             {columns.map((column) => (
               <KanbanColumn
                 key={column.status}

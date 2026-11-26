@@ -5,6 +5,7 @@ import {
   METRICS_PATH,
   NEW_APPLICATION_PATH,
   editApplicationPath,
+  usesWideLayout,
 } from "./routes";
 import { isPrivatePath } from "@/lib/auth/routes";
 
@@ -27,5 +28,25 @@ describe("rutas de candidaturas", () => {
     expect(editApplicationPath("a/b?c")).toBe(
       "/dashboard/candidaturas/a%2Fb%3Fc/editar",
     );
+  });
+});
+
+describe("usesWideLayout", () => {
+  it("solo el tablero usa el ancho amplio", () => {
+    expect(usesWideLayout(BOARD_PATH)).toBe(true);
+    for (const path of [
+      APPLICATIONS_PATH,
+      METRICS_PATH,
+      NEW_APPLICATION_PATH,
+      editApplicationPath("abc"),
+    ]) {
+      expect(usesWideLayout(path)).toBe(false);
+    }
+  });
+
+  it("compara la ruta exacta (sin barra final ni subrutas)", () => {
+    expect(usesWideLayout(`${BOARD_PATH}/`)).toBe(false);
+    expect(usesWideLayout(`${BOARD_PATH}/otra`)).toBe(false);
+    expect(usesWideLayout("")).toBe(false);
   });
 });

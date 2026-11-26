@@ -39,13 +39,3 @@ export const STATUS_COLORS: Readonly<Record<ApplicationStatus, string>> = {
 
 /** Axis ticks inherit the text colour of the wrapper (light and dark mode). */
 export const AXIS_TICK = { fill: "currentColor", fontSize: 12 } as const;
-
-/** Tooltip on a white box with dark text, whatever the series colour. */
-export const TOOLTIP_CONTENT_STYLE = {
-  backgroundColor: "#ffffff",
-  border: "1px solid #a1a1aa",
-  borderRadius: 6,
-  color: "#18181b",
-} as const;
-
-export const TOOLTIP_ITEM_STYLE = { color: "#18181b" } as const;

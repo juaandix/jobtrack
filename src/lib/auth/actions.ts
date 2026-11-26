@@ -2,19 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { authErrorCode, authErrorMessage } from "./errors";
+import { authErrorLog, authErrorMessage } from "./errors";
 import {
   AUTH_NOTICES,
   INITIAL_LOGIN_STATE,
   INITIAL_SIGNUP_STATE,
   LOGIN_FIELDS,
   SIGNUP_FIELDS,
-  readFormFields,
-  readStringField,
   type LoginFormState,
   type SignupFormState,
 } from "./form-state";
 import { LOGIN_PATH, NEXT_PARAM, safeNextPath } from "./routes";
+import { readFormFields, readStringField } from "@/lib/forms/fields";
 import { createClient } from "@/lib/supabase/server";
 import { loginSchema, signupSchema } from "@/lib/validation/auth";
 import { fieldErrors } from "@/lib/validation/errors";
@@ -24,8 +23,9 @@ function redirectTarget(formData: FormData): string {
 }
 
 function logAuthError(operation: string, error: unknown): void {
-  // Only the error code: never the email or the password.
-  console.error(`[auth] ${operation} failed`, authErrorCode(error) ?? error);
+  // Only name, code and message: never the whole error, the email or the
+  // password.
+  console.error(`[auth] ${operation} failed`, authErrorLog(error));
 }
 
 /** Validates the login form and signs the user in with email and password. */

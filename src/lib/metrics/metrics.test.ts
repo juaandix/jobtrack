@@ -6,6 +6,7 @@ import {
   countByStatus,
   isResponded,
   lastWeeksRange,
+  nonZeroStatuses,
   responseRate,
   statusByPortal,
   summarize,
@@ -325,5 +326,36 @@ describe("buildMetrics", () => {
       "no es fecha",
     );
     expect(metrics.weekly.map(({ count }) => count)).toEqual([1, 0, 1]);
+  });
+});
+
+describe("nonZeroStatuses", () => {
+  const zero = countByStatus([]);
+
+  it("sin candidaturas devuelve una lista vacía", () => {
+    expect(nonZeroStatuses(zero)).toEqual([]);
+  });
+
+  it("solo incluye los estados con candidaturas, en el orden del enum", () => {
+    expect(
+      nonZeroStatuses({ ...zero, rechazada_por_mi: 1, enviada: 3, oferta: 2 }),
+    ).toEqual([
+      { status: "enviada", count: 3 },
+      { status: "oferta", count: 2 },
+      { status: "rechazada_por_mi", count: 1 },
+    ]);
+  });
+
+  it("con todos los estados ocupados los devuelve todos", () => {
+    const all = countByStatus(
+      APPLICATION_STATUSES.map((status) => ({
+        status,
+        portal: "otro",
+        applied_at: "2026-11-26",
+      })),
+    );
+    expect(nonZeroStatuses(all).map(({ status }) => status)).toEqual([
+      ...APPLICATION_STATUSES,
+    ]);
   });
 });

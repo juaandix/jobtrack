@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { ApplicationForm } from "@/components/applications/application-form";
-import { FormMessages } from "@/components/auth/form-messages";
+import { FormMessages } from "@/components/forms/form-messages";
+import { PAGE_TITLE_CLASS } from "@/components/ui/classes";
 import { updateApplicationAction } from "@/lib/applications/actions";
 import { applicationFormValues } from "@/lib/applications/form-state";
 import { getApplication } from "@/lib/applications/repository";
@@ -27,11 +28,10 @@ export default async function EditApplicationPage({
 
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-        Editar candidatura
-      </h1>
+      <h1 className={PAGE_TITLE_CLASS}>Editar candidatura</h1>
       {result.ok ? (
         <ApplicationForm
+          mode="update"
           action={updateApplicationAction.bind(null, result.data.id)}
           initialValues={applicationFormValues(result.data)}
           submitLabel="Guardar cambios"

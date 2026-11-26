@@ -1,23 +1,14 @@
 import { randomUUID } from "node:crypto";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import {
+  expectNoHorizontalScroll,
+  field,
+  visible,
+} from "./support/applications";
 import { signInForTest } from "./support/auth";
 
 // Needs the local Supabase running (`npm run db:start`) and its URL and public
 // key in .env.local. See e2e/support/auth.ts for how the user is obtained.
-
-/** Only the visible match: the list renders cards (< md) or a table (≥ md). */
-function visible(page: Page, name: string) {
-  return page.getByText(name, { exact: true }).filter({ visible: true });
-}
-
-async function expectNoHorizontalScroll(page: Page) {
-  const overflow = await page.evaluate(
-    () =>
-      document.documentElement.scrollWidth -
-      document.documentElement.clientWidth,
-  );
-  expect(overflow).toBeLessThanOrEqual(0);
-}
 
 test("crear, editar y borrar una candidatura", async ({ page }) => {
   const company = `Acme ${randomUUID().slice(0, 8)}`;
@@ -42,28 +33,32 @@ test("crear, editar y borrar una candidatura", async ({ page }) => {
     await expect(
       page.getByRole("heading", { level: 1, name: "Nueva candidatura" }),
     ).toBeVisible();
-    await expect(page.getByLabel("Fecha de la candidatura")).toHaveValue(
+    await expect(field(page, "Fecha de la candidatura")).toHaveValue(
       /^\d{4}-\d{2}-\d{2}$/,
     );
     await expectNoHorizontalScroll(page);
 
-    await page.getByLabel("Empresa", { exact: true }).fill(company);
-    await page.getByLabel("Puesto", { exact: true }).fill(position);
+    await field(page, "Empresa").fill(company);
+    await field(page, "Puesto").fill(position);
+    await field(page, "Portal").selectOption({ label: "LinkedIn" });
     await page
-      .getByLabel("Portal", { exact: true })
-      .selectOption({ label: "LinkedIn" });
-    await page.getByLabel(/Salario mínimo/).fill("50000");
-    await page.getByLabel(/Salario máximo/).fill("40000");
+      .getByLabel(/Salario mínimo/)
+      .filter({ visible: true })
+      .fill("50000");
+    await page
+      .getByLabel(/Salario máximo/)
+      .filter({ visible: true })
+      .fill("40000");
     await page.getByRole("button", { name: "Guardar candidatura" }).click();
 
-    const salaryMax = page.getByLabel(/Salario máximo/);
+    const salaryMax = page
+      .getByLabel(/Salario máximo/)
+      .filter({ visible: true });
     await expect(salaryMax).toHaveAttribute("aria-invalid", "true");
     await expect(
       page.getByText("El salario máximo no puede ser menor que el mínimo"),
     ).toBeVisible();
-    await expect(page.getByLabel("Empresa", { exact: true })).toHaveValue(
-      company,
-    );
+    await expect(field(page, "Empresa")).toHaveValue(company);
 
     await salaryMax.fill("60000");
     await page.getByRole("button", { name: "Guardar candidatura" }).click();
@@ -86,14 +81,12 @@ test("crear, editar y borrar una candidatura", async ({ page }) => {
     await expect(
       page.getByRole("heading", { level: 1, name: "Editar candidatura" }),
     ).toBeVisible();
-    await expect(page.getByLabel("Empresa", { exact: true })).toHaveValue(
-      company,
-    );
-    await expect(page.getByLabel(/Salario máximo/)).toHaveValue("60000");
+    await expect(field(page, "Empresa")).toHaveValue(company);
+    await expect(
+      page.getByLabel(/Salario máximo/).filter({ visible: true }),
+    ).toHaveValue("60000");
 
-    await page
-      .getByLabel("Estado", { exact: true })
-      .selectOption({ label: "Entrevista" });
+    await field(page, "Estado").selectOption({ label: "Entrevista" });
     await page.getByRole("button", { name: "Guardar cambios" }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
@@ -124,6 +117,14 @@ test("crear, editar y borrar una candidatura", async ({ page }) => {
     await dialog.getByRole("button", { name: "Sí, borrar" }).click();
 
     await expect(visible(page, company)).toHaveCount(0);
+    // The row is gone: the deletion is announced and the focus goes to the
+    // page heading instead of being lost.
+    await expect(
+      page.getByText(`Candidatura borrada: ${position} en ${company}.`),
+    ).toBeAttached();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Mis candidaturas" }),
+    ).toBeFocused();
   });
 });
 

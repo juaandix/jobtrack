@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { AUTH_ERROR_MESSAGES, authErrorCode, authErrorMessage } from "./errors";
+import {
+  AUTH_ERROR_MESSAGES,
+  authErrorCode,
+  authErrorLog,
+  authErrorMessage,
+} from "./errors";
 
 describe("authErrorCode", () => {
   it("lee el código de un error de Supabase", () => {
@@ -51,5 +56,46 @@ describe("authErrorMessage", () => {
     expect(authErrorMessage({ code: "toString" }, "login")).toBe(
       AUTH_ERROR_MESSAGES.generic,
     );
+  });
+});
+
+describe("authErrorLog", () => {
+  it("de un error de Supabase solo conserva name, code y message", () => {
+    const error = Object.assign(new Error("Invalid login credentials"), {
+      name: "AuthApiError",
+      code: "invalid_credentials",
+      status: 400,
+      request: { email: "ana@example.com", password: "secreta1" },
+    });
+
+    const logged = authErrorLog(error);
+
+    expect(logged).toEqual({
+      name: "AuthApiError",
+      code: "invalid_credentials",
+      message: "Invalid login credentials",
+    });
+    expect(JSON.stringify(logged)).not.toContain("secreta1");
+    expect(JSON.stringify(logged)).not.toContain("ana@example.com");
+  });
+
+  it("lee name y message heredados de Error", () => {
+    expect(authErrorLog(new TypeError("fetch failed"))).toEqual({
+      name: "TypeError",
+      message: "fetch failed",
+    });
+  });
+
+  it("omite los campos que faltan o no son texto", () => {
+    expect(authErrorLog({ code: "weak_password" })).toEqual({
+      code: "weak_password",
+    });
+    expect(authErrorLog({ code: 42, message: { detail: "x" } })).toEqual({});
+  });
+
+  it("con algo que no es un objeto devuelve un objeto vacío", () => {
+    for (const value of [null, undefined, "boom", 500]) {
+      expect(authErrorLog(value)).toEqual({});
+    }
   });
 });
