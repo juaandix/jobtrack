@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   APPLICATIONS_PATH,
+  BOARD_PATH,
   NEW_APPLICATION_PATH,
   editApplicationPath,
 } from "./routes";
@@ -10,7 +11,9 @@ describe("rutas de candidaturas", () => {
   it("cuelgan del dashboard, así que el proxy las protege", () => {
     expect(APPLICATIONS_PATH).toBe("/dashboard");
     expect(NEW_APPLICATION_PATH).toBe("/dashboard/candidaturas/nueva");
+    expect(BOARD_PATH).toBe("/dashboard/tablero");
     expect(isPrivatePath(NEW_APPLICATION_PATH)).toBe(true);
+    expect(isPrivatePath(BOARD_PATH)).toBe(true);
     expect(isPrivatePath(editApplicationPath("abc"))).toBe(true);
   });
 

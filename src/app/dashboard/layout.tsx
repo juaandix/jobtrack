@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { Suspense } from "react";
+import { PrivateNavLinks } from "@/components/navigation/private-nav-links";
 import { logout } from "@/lib/auth/actions";
-import { DASHBOARD_PATH } from "@/lib/auth/routes";
 import { requireSessionUser } from "@/lib/auth/session";
 
 /**
@@ -18,12 +17,7 @@ async function PrivateShell({ children }: { children: React.ReactNode }) {
           aria-label="Principal"
           className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2"
         >
-          <Link
-            href={DASHBOARD_PATH}
-            className="inline-flex min-h-11 items-center font-semibold text-zinc-900 hover:text-blue-800 focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:outline-none dark:text-zinc-50 dark:hover:text-blue-300"
-          >
-            Candidaturas
-          </Link>
+          <PrivateNavLinks />
           <div className="flex min-w-0 items-center gap-3">
             {user.email ? (
               <span className="truncate text-sm text-zinc-700 dark:text-zinc-300">

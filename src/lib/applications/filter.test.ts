@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   NO_FILTERS,
   applicationFiltersHref,
+  applicationsCount,
   filterApplications,
   filtersFromFormData,
   hasActiveFilters,
@@ -277,6 +278,14 @@ describe("applicationFiltersHref", () => {
     expect(parseApplicationFilters(Object.fromEntries(search))).toEqual(
       original,
     );
+  });
+});
+
+describe("applicationsCount", () => {
+  it("usa el singular solo para una", () => {
+    expect(applicationsCount(0)).toBe("0 candidaturas");
+    expect(applicationsCount(1)).toBe("1 candidatura");
+    expect(applicationsCount(2)).toBe("2 candidaturas");
   });
 });
 

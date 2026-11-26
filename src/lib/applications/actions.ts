@@ -22,7 +22,7 @@ import {
   deleteApplication,
   updateApplication,
 } from "./repository";
-import { APPLICATIONS_PATH } from "./routes";
+import { APPLICATIONS_PATH, BOARD_PATH } from "./routes";
 import { readStringField } from "@/lib/auth/form-state";
 import { LOGIN_PATH } from "@/lib/auth/routes";
 import { getSessionUser } from "@/lib/auth/session";
@@ -155,5 +155,6 @@ export async function updateStatusAction(
   if (!result.ok) return result;
 
   revalidatePath(APPLICATIONS_PATH);
+  revalidatePath(BOARD_PATH);
   return result;
 }

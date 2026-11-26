@@ -128,7 +128,8 @@ export function applicationFiltersHref(filters: ApplicationFilters): string {
   return search === "" ? APPLICATIONS_PATH : `${APPLICATIONS_PATH}?${search}`;
 }
 
-function applicationsCount(count: number): string {
+/** "1 candidatura", "3 candidaturas". */
+export function applicationsCount(count: number): string {
   return `${count} ${count === 1 ? "candidatura" : "candidaturas"}`;
 }
 

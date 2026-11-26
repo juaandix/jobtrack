@@ -349,7 +349,7 @@ describe("updateStatusAction", () => {
     },
   );
 
-  it("actualiza solo el estado, sin user_id, y revalida la lista", async () => {
+  it("actualiza solo el estado, sin user_id, y revalida la lista y el tablero", async () => {
     const updated: Application = { ...ROW, status: "entrevista" };
     repository.updateApplication.mockResolvedValue({ ok: true, data: updated });
 
@@ -361,6 +361,7 @@ describe("updateStatusAction", () => {
     });
     expect(result).toEqual({ ok: true, data: updated });
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard");
+    expect(revalidatePath).toHaveBeenCalledWith("/dashboard/tablero");
   });
 
   it("si no existe o es ajena devuelve 'no encontrada', nunca éxito", async () => {

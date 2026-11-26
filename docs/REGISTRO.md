@@ -120,3 +120,12 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO
 - Commit: feat(kanban): add status grouping, optimistic status change helpers and updateStatus action
 - Notas: `src/lib/applications/kanban.ts` (`groupByStatus`, `planStatusChange`, `apply/revert/settleStatusChange`, estado optimista sobre lista plana); `updateStatusAction(id, status)` en `actions.ts` (revalida `/dashboard`). Para el ciclo 6.2: revalidar también la ruta del tablero si no es `/dashboard`; opcional quitar el `Map` de `groupByStatus` (rama `?? []` inalcanzable) y añadir test con argumentos no string.
+
+### 6.2 + selector — Tablero kanban con @dnd-kit y selector en cada tarjeta
+- Ronda 1: RECHAZADO — título del test de `deleteApplicationAction` (`src/lib/applications/actions.test.ts:277`) dice "revalida la lista y el tablero" pero solo revalida la lista; cambio no pedido → devolver el título original ("borra la candidatura y revalida la lista").
+- Ronda 2: APROBADO (e2e 18 passed; db:test:rls 15 PASS)
+- Commit: feat(kanban): add kanban board with dnd-kit drag and drop and per-card status selector
+- Notas: ruta `/dashboard/tablero` (decisión del orquestador; nav Lista/Tablero); `@dnd-kit/core@6.3.1`; arrastre solo desde el asa; teclado salta de columna en columna. Criterios: todos CUMPLEN (8 comandos OK, e2e 18 passed, db:test:rls 15 PASS). Testing comprobó con un e2e propio (no versionado) que create/update/delete no dejan el tablero con datos obsoletos.
+- Pendientes para el hito 8: ancho del tablero en escritorio; migrar specs antiguos a `e2e/support/applications.ts`; ids fijos duplicados en formularios nueva/editar con cacheComponents (`id="application-status"`); quitar `?? []` de `groupByStatus`.
+
+**Hito 6 cerrado** — 2 ciclos (6.1+6.3 · 6.2), el segundo aprobado en la ronda 2.
