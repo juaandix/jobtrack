@@ -147,3 +147,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Commit: feat(ui): polish responsive layouts, dark mode and states, resolve pending follow-ups and add screenshots
 - Notas: módulos compartidos `src/components/ui/classes.ts`, `src/components/forms/`, `src/lib/forms/`; not-found y error globales; anuncio "Candidatura borrada" (`aria-live`) + foco al h1; edición valida con `applicationUpdateSchema` (prop `mode`); ids con `useId`; tablero `max-w-screen-2xl`; métricas en tarjetas < sm; refine de contraseñas con email vacío corregido; `logAuthError` solo name/code/message; `server-only@0.0.1` en repository; TS-02 con `scripts/find-explicit-any.sh`; capturas versionadas en `docs/screenshots/` con `npm run screenshots` (fuera de `npm run e2e`). Develop hizo por error un `git rm` y un `git stash` y los deshizo; el orquestador verificó índice y stash vacíos.
 - Limitación conocida (pendiente de confirmar por el usuario; por defecto se acepta): sin JavaScript las páginas privadas se quedan en "Cargando…" (cacheComponents + streaming). El e2e sin JS comprueba que la URL del GET filtra en el servidor. Ninguna directriz exige funcionar sin JS.
+
+### 8.3 — README en español
+- Ronda 1: APROBADO (e2e 22 passed; db:test:rls 15 PASS; pasos de arranque local verificados)
+- Commit: docs: add Spanish README with agent team, local setup, scripts and Vercel deployment
+- Notas: huecos `PENDIENTE` para URL de producción, usuario de prueba y verificación del despliegue; `<url-del-repositorio>` se sustituye en el hito 9. En la nube, sin ruta de callback, el enlace de confirmación de email confirma la cuenta pero no abre sesión (revisar en el hito 9).
+
+**Hito 8 cerrado** — 2 ciclos (8.1+8.2 · 8.3), ambos aprobados en la primera ronda.
