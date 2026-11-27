@@ -166,3 +166,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO (lint, typecheck, format, coverage, build y guidelines OK; e2e no aplica)
 - Commit: docs: update README now that the repository is public
 - Notas: el orquestador hizo público el repo con `gh` (autorizado por el usuario; Testing ya había verificado SEC-01 en todo el historial). Las credenciales del usuario de prueba se entregan aparte (formulario de la oferta), no en el repo. El despliegue de Vercel de `36e5b98` salió "Deployment was blocked" (producción sigue en `21c53d4`, misma app); pendiente de revisar por el usuario en el panel de Vercel.
+
+### 9.3 — Verificación final: smoke e2e contra producción
+- Ronda 1: APROBADO (`npm run e2e:prod` 1 passed en 8.5 s contra https://jobtrack-brown-two.vercel.app: login → crear → ver → borrar; sin datos residuales; git limpio)
+- Commit: docs: close milestone 9 with production smoke verification
+- Notas: usuario de prueba creado por el usuario en Supabase (credenciales solo en `.env.local` y en el formulario de la oferta). Vercel desplegó `b384345` con éxito; el bloqueo de `36e5b98` no se repitió.
+
+**Hito 9 cerrado** — 3 ciclos (9.1 · 9.2 · 9.3), todos aprobados en la primera ronda. **Proyecto completo.**
