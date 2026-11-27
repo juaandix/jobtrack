@@ -10,11 +10,11 @@ trabajan contra unas directrices de calidad verificables.
 - **URL de producción:**
   [https://jobtrack-brown-two.vercel.app](https://jobtrack-brown-two.vercel.app) (Vercel, con
   Supabase en la nube).
-- **Usuario de prueba:** hay un usuario de prueba en producción; pide las credenciales al autor.
-  También puedes crear tu propia cuenta en
+- **Usuario de prueba:** hay un usuario de prueba en producción; sus credenciales se facilitan
+  aparte (no están en el repositorio). También puedes crear tu propia cuenta en
   [`/registro`](https://jobtrack-brown-two.vercel.app/registro).
-- **Código:** [github.com/juaandix/jobtrack](https://github.com/juaandix/jobtrack). El
-  repositorio es privado: para clonarlo necesitas que el autor te dé acceso.
+- **Código:** [github.com/juaandix/jobtrack](https://github.com/juaandix/jobtrack) (repositorio
+  público).
 
 ## Funcionalidades
 
@@ -135,8 +135,7 @@ Vercel) son paradas manuales: ningún agente escribe claves reales en ficheros v
 
 ### Pasos
 
-1. Clona el repositorio (es privado: necesitas acceso en GitHub) e instala las dependencias
-   exactas del lockfile:
+1. Clona el repositorio e instala las dependencias exactas del lockfile:
 
    ```bash
    git clone https://github.com/juaandix/jobtrack.git jobtrack

@@ -161,3 +161,8 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Ronda 1: APROBADO (8 comandos OK; e2e 22 passed; db:test:rls OK; SEC-01 sobre todo el historial sin claves; `.env.local` nunca versionado; producción: `/` 200 y `/dashboard` sin sesión → 307 a `/login`)
 - Commit: feat(deploy): add production smoke e2e and fill README with production URL and deployment steps
 - Notas: app en https://jobtrack-brown-two.vercel.app; repo privado github.com/juaandix/jobtrack. `npm run e2e:prod` (`playwright.prod.config.ts`, `e2e/production/smoke.prod.ts`) separado de `npm run e2e`: login → crear → ver → borrar, con limpieza en `afterEach`; no registra usuarios y exige `E2E_PROD_USER_EMAIL`/`E2E_PROD_USER_PASSWORD`. SEC-05 ampliada a esas variables. Credenciales del usuario de prueba fuera del repo (el README remite al autor). `db push --remote` necesario con la CLI 3.4. Pendiente: ejecutar el smoke real contra producción cuando el usuario cree el usuario de prueba (parada manual).
+
+### 9.2 — README: el repositorio ya es público
+- Ronda 1: APROBADO (lint, typecheck, format, coverage, build y guidelines OK; e2e no aplica)
+- Commit: docs: update README now that the repository is public
+- Notas: el orquestador hizo público el repo con `gh` (autorizado por el usuario; Testing ya había verificado SEC-01 en todo el historial). Las credenciales del usuario de prueba se entregan aparte (formulario de la oferta), no en el repo. El despliegue de Vercel de `36e5b98` salió "Deployment was blocked" (producción sigue en `21c53d4`, misma app); pendiente de revisar por el usuario en el panel de Vercel.
