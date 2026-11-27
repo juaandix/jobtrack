@@ -7,14 +7,14 @@ trabajan contra unas directrices de calidad verificables.
 
 ## Demo
 
-<!-- PENDIENTE: URL de producción (hito 9) -->
-
-- **URL de producción:** Pendiente (se añade en el hito 9, tras el despliegue en Vercel).
-
-<!-- PENDIENTE: usuario de prueba (hito 9) -->
-
-- **Usuario de prueba:** Pendiente (se añade en el hito 9). Mientras tanto, puedes crear tu
-  propia cuenta en `/registro`.
+- **URL de producción:**
+  [https://jobtrack-brown-two.vercel.app](https://jobtrack-brown-two.vercel.app) (Vercel, con
+  Supabase en la nube).
+- **Usuario de prueba:** hay un usuario de prueba en producción; pide las credenciales al autor.
+  También puedes crear tu propia cuenta en
+  [`/registro`](https://jobtrack-brown-two.vercel.app/registro).
+- **Código:** [github.com/juaandix/jobtrack](https://github.com/juaandix/jobtrack). El
+  repositorio es privado: para clonarlo necesitas que el autor te dé acceso.
 
 ## Funcionalidades
 
@@ -81,7 +81,7 @@ Requiere Node.js 22.12 o superior (`engines` en `package.json`; `.nvmrc` fija la
 ├── supabase/
 │   ├── config.jsonc      # Configuración del stack local
 │   └── migrations/       # Esquema, enums, restricciones y políticas RLS
-├── e2e/                  # Tests de Playwright (y capturas en e2e/screenshots/)
+├── e2e/                  # Playwright: specs locales, smoke de producción (e2e/production/) y capturas (e2e/screenshots/)
 ├── scripts/              # check-guidelines.sh y test-rls.ts
 ├── docs/                 # PLAN, DIRECTRICES, REGISTRO y capturas
 └── .claude/agents/       # Definiciones de los agentes Develop y Testing
@@ -135,10 +135,11 @@ Vercel) son paradas manuales: ningún agente escribe claves reales en ficheros v
 
 ### Pasos
 
-1. Clona el repositorio e instala las dependencias exactas del lockfile:
+1. Clona el repositorio (es privado: necesitas acceso en GitHub) e instala las dependencias
+   exactas del lockfile:
 
    ```bash
-   git clone <url-del-repositorio> jobtrack
+   git clone https://github.com/juaandix/jobtrack.git jobtrack
    cd jobtrack
    npm ci
    ```
@@ -165,6 +166,9 @@ Vercel) son paradas manuales: ningún agente escribe claves reales en ficheros v
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: la clave pública `anon` (`ANON_KEY`).
    - `E2E_USER_EMAIL` y `E2E_USER_PASSWORD`: déjalas vacías en local (ver
      [Tests e2e](#tests-e2e)).
+   - `E2E_PROD_USER_EMAIL`, `E2E_PROD_USER_PASSWORD` y `PLAYWRIGHT_BASE_URL`: solo para el smoke
+     contra producción (ver [Smoke e2e contra producción](#smoke-e2e-contra-producción)); en
+     local puedes dejarlas vacías.
 
    Si prefieres ver los valores con formato `CLAVE=valor`, usa `npx supabase status -o env`.
    Usa solo la URL y la clave pública: la clave secreta del proyecto no se usa nunca en la app.
@@ -212,31 +216,50 @@ instala el navegador con `npx playwright install chromium`.
 
 - Sin `E2E_USER_EMAIL`/`E2E_USER_PASSWORD`, cada test registra un usuario nuevo en `/registro`.
 - Con las dos variables definidas en `.env.local` (o en el entorno), inicia sesión con ese usuario
-  existente, por ejemplo para probar contra un proyecto en la nube.
+  existente, que tiene que existir en la base contra la que corre la app local.
+
+### Smoke e2e contra producción
+
+`npm run e2e:prod` ejecuta un único test (`e2e/production/smoke.prod.ts`, con su propia
+configuración en `playwright.prod.config.ts`) contra la app desplegada, sin arrancar ningún
+servidor local: inicia sesión, crea una candidatura con un nombre de empresa único
+(`Smoke e2e <id>`), comprueba que aparece en la lista y la borra. Si el test falla a mitad, la
+borra igualmente al terminar, así que no deja datos en producción. `npm run e2e` no lo ejecuta.
+
+- **URL:** la de `PLAYWRIGHT_BASE_URL`; si está vacía, la de producción
+  (`https://jobtrack-brown-two.vercel.app`).
+- **Usuario:** exige `E2E_PROD_USER_EMAIL` y `E2E_PROD_USER_PASSWORD` de un usuario que ya
+  exista en ese entorno. No registra usuarios: sin las dos variables termina al momento con un
+  error que lo explica.
+
+Las variables se leen de `.env.local` o del entorno. Son distintas de las `E2E_USER_*` de
+`npm run e2e`, así que puedes tener las credenciales de producción en `.env.local` sin que el e2e
+local las use.
 
 ## Scripts
 
-| Script                     | Qué hace                                                                                                    |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `npm run dev`              | Servidor de desarrollo de Next.js en `http://localhost:3000`.                                               |
-| `npm run build`            | Compilación de producción.                                                                                  |
-| `npm run start`            | Sirve la compilación de producción (después de `build`).                                                    |
-| `npm run lint`             | ESLint sobre todo el proyecto, sin errores ni warnings (`--max-warnings=0`).                                |
-| `npm run typecheck`        | Genera los tipos de rutas de Next (`next typegen`) y ejecuta `tsc --noEmit`.                                |
-| `npm run format`           | Formatea el proyecto con Prettier.                                                                          |
-| `npm run format:check`     | Comprueba el formato con Prettier sin modificar ficheros.                                                   |
-| `npm run test`             | Tests unitarios y de componentes con Vitest (una pasada).                                                   |
-| `npm run test:watch`       | Vitest en modo observación.                                                                                 |
-| `npm run test:coverage`    | Tests con cobertura; falla si `src/lib` baja del 80 % en líneas, funciones o ramas.                         |
-| `npm run e2e`              | Tests end-to-end con Playwright (escritorio y 375 px). Usa `E2E_USER_EMAIL`/`E2E_USER_PASSWORD` si existen. |
-| `npm run screenshots`      | Compila, sirve la app en el puerto 3100 y guarda capturas de las vistas principales en `docs/screenshots/`. |
-| `npm run check:guidelines` | Ejecuta `scripts/check-guidelines.sh`: las comprobaciones automáticas de `docs/DIRECTRICES.md`.             |
-| `npm run db:start`         | Arranca Supabase local con Docker.                                                                          |
-| `npm run db:stop`          | Para Supabase local.                                                                                        |
-| `npm run db:reset`         | Recrea la base de datos local y aplica todas las migraciones (borra los datos locales).                     |
-| `npm run db:status`        | Muestra las URLs y claves del stack local.                                                                  |
-| `npm run db:test:rls`      | Ejecuta `scripts/test-rls.ts`: prueba el aislamiento por usuario (RLS) contra Supabase local.               |
-| `npm run db:types`         | Regenera `src/lib/database.types.ts` desde la base local y lo formatea.                                     |
+| Script                     | Qué hace                                                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `npm run dev`              | Servidor de desarrollo de Next.js en `http://localhost:3000`.                                                                  |
+| `npm run build`            | Compilación de producción.                                                                                                     |
+| `npm run start`            | Sirve la compilación de producción (después de `build`).                                                                       |
+| `npm run lint`             | ESLint sobre todo el proyecto, sin errores ni warnings (`--max-warnings=0`).                                                   |
+| `npm run typecheck`        | Genera los tipos de rutas de Next (`next typegen`) y ejecuta `tsc --noEmit`.                                                   |
+| `npm run format`           | Formatea el proyecto con Prettier.                                                                                             |
+| `npm run format:check`     | Comprueba el formato con Prettier sin modificar ficheros.                                                                      |
+| `npm run test`             | Tests unitarios y de componentes con Vitest (una pasada).                                                                      |
+| `npm run test:watch`       | Vitest en modo observación.                                                                                                    |
+| `npm run test:coverage`    | Tests con cobertura; falla si `src/lib` baja del 80 % en líneas, funciones o ramas.                                            |
+| `npm run e2e`              | Tests end-to-end con Playwright (escritorio y 375 px). Usa `E2E_USER_EMAIL`/`E2E_USER_PASSWORD` si existen.                    |
+| `npm run e2e:prod`         | Smoke e2e contra la app desplegada (`PLAYWRIGHT_BASE_URL` o producción). Exige `E2E_PROD_USER_EMAIL`/`E2E_PROD_USER_PASSWORD`. |
+| `npm run screenshots`      | Compila, sirve la app en el puerto 3100 y guarda capturas de las vistas principales en `docs/screenshots/`.                    |
+| `npm run check:guidelines` | Ejecuta `scripts/check-guidelines.sh`: las comprobaciones automáticas de `docs/DIRECTRICES.md`.                                |
+| `npm run db:start`         | Arranca Supabase local con Docker.                                                                                             |
+| `npm run db:stop`          | Para Supabase local.                                                                                                           |
+| `npm run db:reset`         | Recrea la base de datos local y aplica todas las migraciones (borra los datos locales).                                        |
+| `npm run db:status`        | Muestra las URLs y claves del stack local.                                                                                     |
+| `npm run db:test:rls`      | Ejecuta `scripts/test-rls.ts`: prueba el aislamiento por usuario (RLS) contra Supabase local.                                  |
+| `npm run db:types`         | Regenera `src/lib/database.types.ts` desde la base local y lo formatea.                                                        |
 
 Antes de entregar cada tarea se ejecutan:
 
@@ -246,26 +269,31 @@ npm run lint && npm run typecheck && npm run format:check && npm run test:covera
 
 ## Despliegue en Vercel
 
-<!-- PENDIENTE: se completa y verifica en el hito 9 -->
+La app está desplegada en
+[https://jobtrack-brown-two.vercel.app](https://jobtrack-brown-two.vercel.app), con un proyecto de
+Supabase en la nube. Estos son los pasos que se siguieron, por si quieres desplegar tu copia:
 
 1. **Crea el proyecto en Supabase.** En [supabase.com/dashboard](https://supabase.com/dashboard),
    **New project**. Anota la referencia del proyecto (aparece en la URL del panel y en
    **Project Settings > General**).
 
-2. **Aplica las migraciones** desde tu copia local:
+2. **Aplica las migraciones** desde tu copia local, con la CLI que trae el proyecto:
 
    ```bash
    npx supabase login
    npx supabase link --project-ref <referencia-del-proyecto>
-   npx supabase db push
+   npx supabase db push --remote
    ```
 
-   `db push` aplica los ficheros de `supabase/migrations/` (tabla, enums, restricciones y RLS).
+   `login` autoriza la CLI con tu cuenta de Supabase y `link` asocia la carpeta al proyecto (puede
+   pedir la contraseña de la base de datos). `db push` aplica los ficheros de `supabase/migrations/`
+   (tabla, enums, restricciones y políticas RLS). Con la CLI 3.4 hace falta `--remote`: sin él,
+   `db push` apunta a la base local.
 
 3. **Configura Auth** en **Authentication > URL Configuration**:
-   - **Site URL:** la URL de producción de Vercel, p. ej. `https://<tu-proyecto>.vercel.app`.
-   - **Redirect URLs:** `https://<tu-proyecto>.vercel.app/**` (y, si quieres usar las previews de
-     Vercel, su dominio).
+   - **Site URL:** la URL de producción de Vercel (aquí, `https://jobtrack-brown-two.vercel.app`).
+   - **Redirect URLs:** la misma URL con comodín (`https://jobtrack-brown-two.vercel.app/**`) y, si
+     quieres usar las previews de Vercel, su dominio.
 
    En **Authentication > Sign In / Providers > Email** decide si exiges confirmar el email. Si
    está activado, tras registrarse la app pide revisar el correo; una vez confirmado, el usuario
@@ -281,15 +309,17 @@ npm run lint && npm run typecheck && npm run format:check && npm run test:covera
      Settings > API Keys**.
 
    Solo esas dos. **Nunca** configures la clave secreta ni la service role key: la app no la
-   necesita y la seguridad la da RLS. Las variables `E2E_USER_*` no hacen falta en Vercel.
+   necesita y la seguridad la da RLS. Las variables `E2E_USER_*`, `E2E_PROD_USER_*` y `PLAYWRIGHT_BASE_URL` no hacen
+   falta en Vercel.
 
 6. **Despliega** y comprueba en la URL de producción:
    - `/dashboard` sin sesión redirige a `/login`.
    - Puedes registrarte (o iniciar sesión con el usuario de prueba), crear una candidatura y verla
      en la lista.
    - El tablero permite cambiar el estado (arrastrando y con el selector) y las métricas cargan.
-   - Opcional: `npm run e2e` contra producción con `E2E_USER_EMAIL`/`E2E_USER_PASSWORD` de un
-     usuario existente.
+   - Con `E2E_PROD_USER_EMAIL`/`E2E_PROD_USER_PASSWORD` de un usuario existente, `npm run e2e:prod` repite
+     el flujo principal de forma automática (ver
+     [Smoke e2e contra producción](#smoke-e2e-contra-producción)).
 
 ## Limitaciones conocidas
 
@@ -298,4 +328,3 @@ npm run lint && npm run typecheck && npm run format:check && npm run test:covera
   JavaScript para mostrarse. La protección de rutas y los filtros sí se resuelven en el servidor:
   `/dashboard?status=…&portal=…&q=…` filtra en el servidor y la respuesta ya trae solo las
   candidaturas que coinciden, aunque sin JavaScript no lleguen a pintarse.
-- La URL de producción y el usuario de prueba están pendientes (hito 9).

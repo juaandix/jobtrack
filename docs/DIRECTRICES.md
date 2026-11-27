@@ -89,7 +89,7 @@ done
 | SEC-02 | `.env.local` y `.env*.local` están en `.gitignore`; `.env.example` existe, contiene todos los nombres de variables usados y ningún valor real. | `git check-ignore .env.local` lo devuelve. Cada `process.env.X` de `src/` aparece en `.env.example`. |
 | SEC-03 | Solo se usan la URL y la clave pública de Supabase (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`). La service role key no se usa en la app. | `grep -rn 'SERVICE_ROLE' src` no devuelve nada. |
 | SEC-04 | Las rutas privadas están protegidas en el servidor (middleware/proxy + comprobación de sesión en la página o acción), no solo ocultando enlaces. | Test o revisión: sin sesión, `/dashboard` redirige a `/login`. |
-| SEC-05 | Credenciales del usuario de prueba e2e solo por variables de entorno (`E2E_USER_EMAIL`, `E2E_USER_PASSWORD`). | `grep -rn '@' e2e` no muestra emails literales con contraseña. |
+| SEC-05 | Credenciales del usuario de prueba e2e solo por variables de entorno (`E2E_USER_EMAIL`, `E2E_USER_PASSWORD` en local; `E2E_PROD_USER_EMAIL`, `E2E_PROD_USER_PASSWORD` para el smoke de producción). | `grep -rn '@' e2e` no muestra emails literales con contraseña. |
 
 ## TEST — Tests
 

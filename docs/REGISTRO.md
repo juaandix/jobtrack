@@ -154,3 +154,10 @@ Cada tarea del plan queda anotada aquí con sus rondas de revisión y el commit 
 - Notas: huecos `PENDIENTE` para URL de producción, usuario de prueba y verificación del despliegue; `<url-del-repositorio>` se sustituye en el hito 9. En la nube, sin ruta de callback, el enlace de confirmación de email confirma la cuenta pero no abre sesión (revisar en el hito 9).
 
 **Hito 8 cerrado** — 2 ciclos (8.1+8.2 · 8.3), ambos aprobados en la primera ronda.
+
+## Hito 9 — Despliegue
+
+### 9.1 — Ajustes finales del despliegue, README de producción y smoke e2e
+- Ronda 1: APROBADO (8 comandos OK; e2e 22 passed; db:test:rls OK; SEC-01 sobre todo el historial sin claves; `.env.local` nunca versionado; producción: `/` 200 y `/dashboard` sin sesión → 307 a `/login`)
+- Commit: feat(deploy): add production smoke e2e and fill README with production URL and deployment steps
+- Notas: app en https://jobtrack-brown-two.vercel.app; repo privado github.com/juaandix/jobtrack. `npm run e2e:prod` (`playwright.prod.config.ts`, `e2e/production/smoke.prod.ts`) separado de `npm run e2e`: login → crear → ver → borrar, con limpieza en `afterEach`; no registra usuarios y exige `E2E_PROD_USER_EMAIL`/`E2E_PROD_USER_PASSWORD`. SEC-05 ampliada a esas variables. Credenciales del usuario de prueba fuera del repo (el README remite al autor). `db push --remote` necesario con la CLI 3.4. Pendiente: ejecutar el smoke real contra producción cuando el usuario cree el usuario de prueba (parada manual).
